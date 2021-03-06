@@ -41,7 +41,7 @@ def crawlerTrangWeb():
     # with open(html_output_path,'w',encoding="utf-8") as temp:
     #     temp.write(str(html_tin_tuc))
 
-    danh_sach_tag_xoa = ['meta','nav', 'picture', 'img', 'source', 'script', 'video', 'progress', 'use', 'svg', 'noscript', 'form']
+    danh_sach_tag_xoa = ['meta','nav', 'picture', 'img', 'source', 'script', 'video', 'progress', 'use', 'svg', 'noscript', 'form', 'header', 'ul']
 
     # Xoa tag ra khoi html
     for tag in html_tin_tuc.find_all(danh_sach_tag_xoa):
@@ -105,39 +105,48 @@ def crawlerBaiBao(link_trang_bai_viet):
         #Lay tac gia
         print(link_trang_bai_viet)
         print(html_trang_bai_bao.find_all(tag_tac_gia, attrs_the_tac_gia))
-        ten_tac_gia = html_trang_bai_bao.find_all(tag_tac_gia, attrs_the_tac_gia)[thu_tu_the_tac_gia]
-        ten_tac_gia = str(ten_tac_gia.text)
+        try:
+            ten_tac_gia = html_trang_bai_bao.find_all(tag_tac_gia, attrs_the_tac_gia)[thu_tu_the_tac_gia]
+            ten_tac_gia = str(ten_tac_gia.text)
+        except:
+            ten_tac_gia = ''
         # write html
         # html_output_path = './crawler_results/temp1.txt'
         # with open(html_output_path,'w',encoding="utf-8") as temp:
         #     temp.write(str(ten_tac_gia))
         # Lay tieu de
-        tieu_de_bai_bao = html_trang_bai_bao.find_all(tag_tieu_de, attrs_the_tieu_de)[thu_tu_the_tieu_de]
-        tieu_de_bai_bao = str(tieu_de_bai_bao.text)
+        try:
+            tieu_de_bai_bao = html_trang_bai_bao.find_all(tag_tieu_de, attrs_the_tieu_de)[thu_tu_the_tieu_de]
+            tieu_de_bai_bao = str(tieu_de_bai_bao.text)
+        except:
+            tieu_de_bai_bao = 'dinh danh tieu de khong dung cho trang: '+link_trang_bai_viet
         # write html
         # html_output_path = './crawler_results/temp2.txt'
         # with open(html_output_path,'w',encoding="utf-8") as temp:
         #     temp.write(str(tieu_de_bai_bao))
 
         # Lay noi dung bai bao
-        noi_dung_bai_bao = html_trang_bai_bao.find_all(tag_noi_dung, attrs_the_noi_dung)[thu_tu_the_noi_dung]
-        
-        danh_sach_tag_xoa = ['meta','nav', 'picture', 'img', 'source', 'script', 'video', 'progress', 'use', 'svg', 'noscript', 'form', 'ul', 'figure', 'a']
-        # Xoa tag ra khoi html
-        for tag in noi_dung_bai_bao.find_all(danh_sach_tag_xoa):
-            tag.extract()
+        try:
+            noi_dung_bai_bao = html_trang_bai_bao.find_all(tag_noi_dung, attrs_the_noi_dung)[thu_tu_the_noi_dung]
+            
+            danh_sach_tag_xoa = ['meta','nav', 'picture', 'img', 'source', 'script', 'video', 'progress', 'use', 'svg', 'noscript', 'form', 'ul', 'figure', 'a', 'header']
+            # Xoa tag ra khoi html
+            for tag in noi_dung_bai_bao.find_all(danh_sach_tag_xoa):
+                tag.extract()
 
-        html_output_path = './crawler_results/temp1.html'
-        with open(html_output_path,'w',encoding="utf-8") as temp:
-            temp.write(str(noi_dung_bai_bao))
-        noi_dung_bai_bao = str(noi_dung_bai_bao.text)
+            html_output_path = './crawler_results/temp1.html'
+            with open(html_output_path,'w',encoding="utf-8") as temp:
+                temp.write(str(noi_dung_bai_bao))
+            noi_dung_bai_bao = str(noi_dung_bai_bao.text)
+        except:
+            noi_dung_bai_bao = 'dinh dang noi dung khong dung cho trang: '+link_trang_bai_viet
         # print(noi_dung_bai_bao)
 
         now = datetime.now()
-        time = now.strftime("%H:%M:%S")
+        time = now.strftime("%H%M%S%f")
         print("time:", time)
         # write html
-        html_output_path = './crawler_results/temp3.txt'
+        html_output_path = './crawler_results/'+time+'.txt'
         with open(html_output_path,'w',encoding="utf-8") as temp:
             temp.write(str(noi_dung_bai_bao))
 
