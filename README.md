@@ -8,6 +8,7 @@ Step 3: cài các module cần thiết:
   - pip install psycopg2-binary
   - pip install django-login-required-middleware
   - pip install beautifulsoup4
+  - pip install validators
   
 Step 4: cài postgres (port 5432), link tham khảo:
 - https://stackjava.com/postgresql/huong-dan-cai-dat-va-cau-hinh-postgresql-tren-windows.html
