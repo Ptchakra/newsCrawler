@@ -15,6 +15,7 @@ Step 3: cài các module cần thiết:
 Step 4: cài postgres (port 5432), link tham khảo:
 - https://stackjava.com/postgresql/huong-dan-cai-dat-va-cau-hinh-postgresql-tren-windows.html
 - https://openplanning.net/10713/cai-dat-co-so-du-lieu-postgresql-tren-windows
+
 Có thể pgAdmin4.exe không chạy nhưng chỉ cần postgres đang chạy trên port 5432 là được (check bằng windown button, gõ service, check postgres status, running là được)
 
 Note: khi cài đặt thì nhớ username và password. thay các mục USER và PASSWORD trong file newsCrawler/newsCrawler/setting.py
@@ -38,7 +39,7 @@ Step 5:
 | python manage.py shell
   - mở localhost:8080 để vào dashboard
 
-test module crawler:
+Test module crawler:
  -cd vào thư mục newsCrawler/newsCrawler
  - trong đó có file doCrawler.py
- -chạy python .\DoCrawler.py trong thư mục crawler_result sẽ có 2 file list_href.txt và các file kết quả crawler nội dung (.txt) (chạy test cho trang vnexpress.new/thoi-su)
+ -chạy python .\DoCrawler.py trong thư mục crawler_result sẽ có file list_href.txt và các file kết quả crawler nội dung (.txt) (chạy test cho trang vnexpress.net/thoi-su)
