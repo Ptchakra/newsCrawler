@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}
+Dashboard
+{% endblock title %}
+
+{% block custom_js_css_link %}
+<link href="{% static 'assets/css/dashboard/dash_1.css' %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="{% static 'assets/css/elements/alert.css' %}">
+{% endblock custom_js_css_link %}
+
+{% block breadcrumb_title %}
+Dashboard
+{% endblock breadcrumb_title %}
+
+{% block page_level_script %}
+
+{% endblock page_level_script %}
