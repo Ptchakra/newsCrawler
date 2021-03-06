@@ -1,7 +1,9 @@
 # newsCrawler
 
-step 1: cài python 3 và pip
-step 2: cài django ("pip install django")
+Step 1: cài python 3 và pip
+
+Step 2: cài django ("pip install django")
+
 Step 3: cài các module cần thiết:
   - pip install djangorestframework-datatables
   - pip install django_ace
