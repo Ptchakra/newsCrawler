@@ -129,7 +129,7 @@ def crawlerBaiBao(link_trang_bai_viet):
         try:
             noi_dung_bai_bao = html_trang_bai_bao.find_all(tag_noi_dung, attrs_the_noi_dung)[thu_tu_the_noi_dung]
             
-            danh_sach_tag_xoa = ['meta','nav', 'picture', 'img', 'source', 'script', 'video', 'progress', 'use', 'svg', 'noscript', 'form', 'ul', 'figure', 'a', 'header']
+            danh_sach_tag_xoa = ['meta','nav', 'picture', 'img', 'source', 'script', 'video', 'progress', 'use', 'svg', 'noscript', 'form', 'ul', 'figure', 'a', 'header', 'span']
             # Xoa tag ra khoi html
             for tag in noi_dung_bai_bao.find_all(danh_sach_tag_xoa):
                 tag.extract()
