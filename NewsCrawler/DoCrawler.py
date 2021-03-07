@@ -62,7 +62,6 @@ def crawlerTrangWeb():
     except:
         print("chua co file href thoi")
     print(danh_sach_href)
-
     print("---------------------")
     for tag in danh_sach_tag_co_href:
         if validators.url(str(tag['href'])):

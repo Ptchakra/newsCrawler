@@ -43,3 +43,17 @@ class top50(models.Model):
     
     def __str__(self):
         return self.link_bai_bao
+
+class so_bai_tung_trang(models.Model):
+    trang_web = models.CharField(max_length=300)
+    so_bai_viet = models.IntegerField()
+    
+    def __str__(self):
+        return self.trang_web
+
+class tong_bai_hang_ngay(models.Model):
+    so_bai_viet = models.IntegerField()
+    ngay_them = models.DateTimeField(default=datetime.now().strftime('%d-%m-%Y %H:%M:%S'))
+    
+    def __str__(self):
+        return self.so_bai_viet
