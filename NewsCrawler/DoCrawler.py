@@ -54,14 +54,22 @@ def crawlerTrangWeb():
 
     # Lay all href
     danh_sach_tag_co_href = html_tin_tuc.find_all(href=re.compile('.+'))
-
     danh_sach_href = []
+    try:
+        with open('./crawler_results/danh_sach_href.txt','r',encoding="utf-8") as file_href:
+            noi_dung_file = file_href.read()
+            danh_sach_href = noi_dung_file.split("\n")
+    except:
+        print("chua co file href thoi")
+    print(danh_sach_href)
+
     print("---------------------")
     for tag in danh_sach_tag_co_href:
         if validators.url(str(tag['href'])):
             if str(tag['href']).split('#')[0] not in danh_sach_href:
                 # print("0: ",str(tag['href']))
                 danh_sach_href.append(str(tag['href']))
+                crawlerBaiBao(str(tag['href']))
 
     chuoi_href = '\n'.join(danh_sach_href)
     # print(danh_sach_href)
@@ -69,8 +77,7 @@ def crawlerTrangWeb():
     html_output_path = './crawler_results/danh_sach_href.txt'
     with open(html_output_path,'w',encoding="utf-8") as temp:
         temp.write(str(chuoi_href))
-    for href in danh_sach_href:
-        crawlerBaiBao(href)
+        
 
 
 def crawlerBaiBao(link_trang_bai_viet):
