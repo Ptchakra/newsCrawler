@@ -6,6 +6,8 @@ import os
 import traceback
 import yaml
 import json
+import bs4
+from bs4 import NavigableString
 import re
 from datetime import datetime
 import time
@@ -61,7 +63,7 @@ def crawlerTrangWeb():
             danh_sach_href = noi_dung_file.split("\n")
     except:
         print("chua co file href thoi")
-    print(danh_sach_href)
+    # print(danh_sach_href)
     print("---------------------")
     for tag in danh_sach_tag_co_href:
         if validators.url(str(tag['href'])):
@@ -132,29 +134,36 @@ def crawlerBaiBao(link_trang_bai_viet):
         #     temp.write(str(tieu_de_bai_bao))
 
         # Lay noi dung bai bao
-        try:
-            noi_dung_bai_bao = html_trang_bai_bao.find_all(tag_noi_dung, attrs_the_noi_dung)[thu_tu_the_noi_dung]
-            
-            danh_sach_tag_xoa = ['meta','nav', 'picture', 'img', 'source', 'script', 'video', 'progress', 'use', 'svg', 'noscript', 'form', 'ul', 'figure', 'a', 'header', 'span']
-            # Xoa tag ra khoi html
-            for tag in noi_dung_bai_bao.find_all(danh_sach_tag_xoa):
-                tag.extract()
+    # try:
+        noi_dung_bai_bao = html_trang_bai_bao.find_all(tag_noi_dung, attrs_the_noi_dung)[thu_tu_the_noi_dung]
+        
+        danh_sach_tag_xoa = ['meta','nav', 'picture', 'img', 'source', 'script', 'video', 'progress', 'use', 'svg', 'noscript', 'form', 'ul', 'a', 'header']
+        # Xoa tag ra khoi html
+        for tag in noi_dung_bai_bao.find_all(danh_sach_tag_xoa):
+            tag.extract()
 
-            html_output_path = './crawler_results/temp1.html'
-            with open(html_output_path,'w',encoding="utf-8") as temp:
-                temp.write(str(noi_dung_bai_bao))
-            noi_dung_bai_bao = str(noi_dung_bai_bao.text)
-        except:
-            noi_dung_bai_bao = 'dinh dang noi dung khong dung cho trang: '+link_trang_bai_viet
-        # print(noi_dung_bai_bao)
-
-        now = datetime.now()
-        time = now.strftime("%H%M%S%f")
-        print("time:", time)
-        # write html
-        html_output_path = './crawler_results/'+time+'.txt'
+        for tag in noi_dung_bai_bao.find_all('p'):
+            new_string = '\n\n\t    ' + str(tag.text)
+            tag.string = new_string
+            # print('tag str: ',tag.text)
+        html_output_path = './crawler_results/temp1.html'
         with open(html_output_path,'w',encoding="utf-8") as temp:
             temp.write(str(noi_dung_bai_bao))
+        noi_dung_bai_bao = str(noi_dung_bai_bao.text)
+        noi_dung_bai_bao = noi_dung_bai_bao.split('\n')
+        noi_dung_bai_bao = list(filter(('').__ne__, noi_dung_bai_bao))
+        noi_dung_bai_bao = '\n'.join(noi_dung_bai_bao)
+        print(noi_dung_bai_bao.replace('\n','\\n '))
+    # except:
+    #     noi_dung_bai_bao = 'dinh dang noi dung khong dung cho trang: '+link_trang_bai_viet
+        # print('noi dung: ',noi_dung_bai_bao)
+        if noi_dung_bai_bao != '':
+            now = datetime.now()
+            time = now.strftime("%H%M%S%f")
+            # write html
+            html_output_path = './crawler_results/'+time+'.txt'
+            with open(html_output_path,'w',encoding="utf-8") as temp:
+                temp.writelines(str(noi_dung_bai_bao))
 
 if __name__ == '__main__':
     crawlerTrangWeb()

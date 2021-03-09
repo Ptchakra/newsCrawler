@@ -10,7 +10,12 @@ from django.contrib.auth.forms import PasswordChangeForm
 
 def index(request):
     context = {
-        'dashboard_data_active': 'true'}
+        'dashboard_data_active': 'true',
+        'count_trang_web' : 10,
+        'top_trang_web' : [20,10,5,20,6],
+        'top_bai_bao' : [20,10,5,20,6,3,5,12,18],
+        'count_bai_bao' : 1235,
+        }
     return render(request, 'dashboard/index.html', context)
 
 

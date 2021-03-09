@@ -11,6 +11,10 @@ Step 3: cài các module cần thiết:
   - pip install django-login-required-middleware
   - pip install beautifulsoup4
   - pip install validators
+  - pip install -U Celery
+  - pip install -U django-celery-beat
+  - pip install lxml
+  - pip install pyyaml
   
 Step 4: cài postgres (port 5432), link tham khảo:
 - https://stackjava.com/postgresql/huong-dan-cai-dat-va-cau-hinh-postgresql-tren-windows.html

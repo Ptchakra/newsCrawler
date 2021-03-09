@@ -15,6 +15,83 @@ Dashboard
 Dashboard
 {% endblock breadcrumb_title %}
 
-{% block page_level_script %}
+{% block main_content %}
+<div class="col-lg-12 layout-px-spacing">
+    <div class="row layout-top-spacing">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+            <div class="row widget-statistic">
+                <div class="col layout-top-spacing">
+                    <div class="widget-chart widget-chart_hybrid widget-warning">
+                        <div class="widget-heading">
+                            <div class="w-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chrome"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="21.17" y1="8" x2="12" y2="8"></line><line x1="3.95" y1="6.06" x2="8.54" y2="14"></line><line x1="10.88" y1="21.94" x2="15.46" y2="14"></line></svg>
+                            </div>
+                            <span>Alive Subdomains: <span><b class="text-warning">{{count_trang_web|intcomma}}</b><br>
+                        </div>
+                        <div class="widget-content">
+                            <div class="w-chart">
+                                <div id="count_trang_web_chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}
+
+{% block page_level_script %}
+<script src="{% static 'plugins/apex/apexchart.min.js' %}"></script>
+<script type="text/javascript">
+
+var label_dates = ['{{top_trang_web.4}}', '{{top_trang_web.3}}', '{{top_trang_web.2}}', '{{top_trang_web.1}}', '{{top_trang_web.0}}'];
+var fill_options = {
+	type:"gradient",
+	gradient: {
+		type: "vertical",
+		shadeIntensity: 1,
+		inverseColors: !1,
+		opacityFrom: .40,
+		opacityTo: .05,
+		stops: [45, 100]
+	}
+}
+var count_trang_web_chart_option = {
+	chart: {
+		id: 'sparkline1',
+		type: 'area',
+		height: 200,
+		width : 400,
+		sparkline: {
+			enabled: true
+		},
+	},
+	stroke: {
+		curve: 'smooth',
+		width: 2,
+	},
+	series: [{
+		name: 'Target added',
+		data: [{{top_trang_web.0}},{{top_trang_web.1}},{{top_trang_web.2}},{{top_trang_web.3}},{{top_trang_web.4}}]
+	}],
+	labels: label_dates,
+	yaxis: {
+		min: 0
+	},
+	colors: ['#1b55e2'],
+	tooltip: {
+		x: {
+			show: true,
+		}
+	},
+	fill: fill_options,
+}
+
+var chart = new ApexCharts(document.querySelector("#count_trang_web_chart"), count_trang_web_chart_option);
+chart.render();
+
+
+</script>
 {% endblock page_level_script %}
