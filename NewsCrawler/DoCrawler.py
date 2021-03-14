@@ -88,8 +88,8 @@ def crawlerBaiBao(link_trang_bai_viet):
         thu_tu_the_tieu_de = 0
         the_noi_dung = '<div class="sidebar-1">'
         thu_tu_the_noi_dung = 0
-        the_tac_gia = '<strong>'
-        thu_tu_the_tac_gia = -1
+        # the_tac_gia = '<strong>'
+        # thu_tu_the_tac_gia = -1
 
         # Lay attrs cua phan the tieu de
         tag_tieu_de = the_tieu_de[1:-1].split(" ")[0]
@@ -100,9 +100,9 @@ def crawlerBaiBao(link_trang_bai_viet):
         parse_html_thiet_dat_phan_noi_dung = BeautifulSoup(the_noi_dung, 'html.parser')
         attrs_the_noi_dung = parse_html_thiet_dat_phan_noi_dung.contents[0].attrs
         # Lay attrs cua phan the tac gia
-        tag_tac_gia = the_tac_gia[1:-1].split(" ")[0]
-        parse_html_thiet_dat_phan_tac_gia = BeautifulSoup(the_tac_gia, 'html.parser')
-        attrs_the_tac_gia = parse_html_thiet_dat_phan_tac_gia.contents[0].attrs
+        # tag_tac_gia = the_tac_gia[1:-1].split(" ")[0]
+        # parse_html_thiet_dat_phan_tac_gia = BeautifulSoup(the_tac_gia, 'html.parser')
+        # attrs_the_tac_gia = parse_html_thiet_dat_phan_tac_gia.contents[0].attrs
         # tag_tac_gia = parse_html_thiet_dat_phan_tac_gia.name
 
         # Lay html cua trang bai bao
@@ -111,13 +111,13 @@ def crawlerBaiBao(link_trang_bai_viet):
         html_trang_bai_bao = BeautifulSoup(html_trang_bai_bao.text, 'html.parser')
 
         #Lay tac gia
-        print(link_trang_bai_viet)
-        print(html_trang_bai_bao.find_all(tag_tac_gia, attrs_the_tac_gia))
-        try:
-            ten_tac_gia = html_trang_bai_bao.find_all(tag_tac_gia, attrs_the_tac_gia)[thu_tu_the_tac_gia]
-            ten_tac_gia = str(ten_tac_gia.text)
-        except:
-            ten_tac_gia = ''
+        # print(link_trang_bai_viet)
+        # print(html_trang_bai_bao.find_all(tag_tac_gia, attrs_the_tac_gia))
+        # try:
+        #     ten_tac_gia = html_trang_bai_bao.find_all(tag_tac_gia, attrs_the_tac_gia)[thu_tu_the_tac_gia]
+        #     ten_tac_gia = str(ten_tac_gia.text)
+        # except:
+        #     ten_tac_gia = ''
         # write html
         # html_output_path = './crawler_results/temp1.txt'
         # with open(html_output_path,'w',encoding="utf-8") as temp:
@@ -143,7 +143,7 @@ def crawlerBaiBao(link_trang_bai_viet):
             tag.extract()
 
         for tag in noi_dung_bai_bao.find_all('p'):
-            new_string = '\n\n\t    ' + str(tag.text)
+            new_string = '\n\n' + str(tag.text)
             tag.string = new_string
             # print('tag str: ',tag.text)
         html_output_path = './crawler_results/temp1.html'

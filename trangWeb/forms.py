@@ -3,7 +3,7 @@ from .models import TrangWeb
 
 
 class AddTargetForm(forms.Form):
-    ten_trang_web = forms.CharField(
+    link_trang_web = forms.CharField(
         required=True,
         widget=forms.TextInput(
             attrs={
@@ -20,7 +20,39 @@ class AddTargetForm(forms.Form):
                 "id": "vungThemTrangWeb",
             }
         ))
-    domain_description = forms.CharField(
+    thu_tu_vung_tin_tuc = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-them-trang-web",
+                "id": "domainDescription",
+            }
+        ))
+    the_tieu_de = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-them-trang-web",
+                "id": "vungThemTrangWeb",
+            }
+        ))
+    thu_tu_the_tieu_de = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-them-trang-web",
+                "id": "domainDescription",
+            }
+        ))
+    the_noi_dung = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-them-trang-web",
+                "id": "vungThemTrangWeb",
+            }
+        ))
+    thu_tu_the_noi_dung = forms.CharField(
         required=True,
         widget=forms.TextInput(
             attrs={
@@ -32,21 +64,61 @@ class AddTargetForm(forms.Form):
 
 class UpdateTargetForm(forms.ModelForm):
     class Meta:
-        fields = ['domain_name', 'domain_description']
-    domain_name = forms.CharField(
+        fields = ['link_trang_web', 'vung_tin_tuc', 'vung_tin_tuc', 'thu_tu_vung_tin_tuc', 'the_tieu_de', 'thu_tu_the_tieu_de', 'the_noi_dung', 'thu_tu_the_noi_dung']
+    link_trang_web = forms.CharField(
         required=True,
-        disabled=True,
         widget=forms.TextInput(
             attrs={
-                "class": "form-control",
+                "class": "form-them-trang-web",
                 "id": "domainName",
+                "placeholder": "example.com"
             }
         ))
-    domain_description = forms.CharField(
-        required=False,
+    vung_tin_tuc = forms.CharField(
+        required=True,
         widget=forms.TextInput(
             attrs={
-                "class": "form-control",
+                "class": "form-them-trang-web",
+                "id": "vungThemTrangWeb",
+            }
+        ))
+    thu_tu_vung_tin_tuc = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-them-trang-web",
+                "id": "domainDescription",
+            }
+        ))
+    the_tieu_de = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-them-trang-web",
+                "id": "vungThemTrangWeb",
+            }
+        ))
+    thu_tu_the_tieu_de = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-them-trang-web",
+                "id": "domainDescription",
+            }
+        ))
+    the_noi_dung = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-them-trang-web",
+                "id": "vungThemTrangWeb",
+            }
+        ))
+    thu_tu_the_noi_dung = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-them-trang-web",
                 "id": "domainDescription",
             }
         ))
