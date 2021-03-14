@@ -41,7 +41,6 @@ List all Target for Recon
                                 <tr>
                                     <th class="checkbox-column">Serial Number</th>
                                     <th>Domain Name</th>
-                                    <th>Description</th>
                                     <th>Added on</th>
                                     <th class="text-center">Last Scanned</th>
                                     <th class="text-center">Action</th>
@@ -52,7 +51,6 @@ List all Target for Recon
                                 <tr>
                                     <td class="checkbox-column"> {{ domain.id }} </td>
                                     <td>{{ domain.domain_name }}</td>
-                                    <td>{{ domain.domain_description }}</td>
                                     <td>{{ domain.insert_date }}</td>
                                     {% if domain.last_scan_date %}
                                     <td class="text-center">{{domain.last_scan_date}}</td>

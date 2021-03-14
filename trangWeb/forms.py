@@ -1,6 +1,7 @@
 from django import forms
 from .models import TrangWeb
 
+defaulWidthHtml = "width : 500px"
 
 class AddTargetForm(forms.Form):
     link_trang_web = forms.CharField(
@@ -11,7 +12,18 @@ class AddTargetForm(forms.Form):
                 "class": "form-them-trang-web",
                 "id": "domainName",
                 "placeholder": "https://example.com/thoi-su",
-                "style" : "width : 500px",
+                "style" : defaulWidthHtml,
+            }
+        ))
+    preHref_tag_vung_tin_tuc = forms.CharField(
+        required=False,
+        label='Đầu thẻ href',
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-them-trang-web",
+                "id": "domainName",
+                "placeholder": "Link đầu chuỗi cho thẻ Href (nếu href có dạng /abc.html)",
+                "style" : defaulWidthHtml,
             }
         ))
     vung_tin_tuc = forms.CharField(
@@ -22,16 +34,18 @@ class AddTargetForm(forms.Form):
                 "class": "form-them-trang-web",
                 "id": "vungThemTrangWeb",
                 "placeholder": "<body class='page-folder ' data-source='Folder'>",
-                "style" : "width : 500px",
+                "style" : defaulWidthHtml,
             }
         ))
-    thu_tu_vung_tin_tuc = forms.CharField(
+    thu_tu_vung_tin_tuc = forms.IntegerField(
         required=False,
         label='Thứ tự thẻ vùng tin tức',
         widget=forms.TextInput(
             attrs={
                 "class": "form-them-trang-web",
                 "id": "domainDescription",
+                "style" : defaulWidthHtml,
+                "value" : 1,
             }
         ))
     the_tieu_de = forms.CharField(
@@ -42,16 +56,18 @@ class AddTargetForm(forms.Form):
                 "class": "form-them-trang-web",
                 "id": "vungThemTrangWeb",
                 "placeholder": "<body class='page-folder ' data-source='Folder'>",
-                "style" : "width : 500px",
+                "style" : defaulWidthHtml,
             }
         ))
-    thu_tu_the_tieu_de = forms.CharField(
+    thu_tu_the_tieu_de = forms.IntegerField(
         required=False,
         label="Thứ tự thẻ tiêu đề",
         widget=forms.TextInput(
             attrs={
                 "class": "form-them-trang-web",
                 "id": "domainDescription",
+                "style" : defaulWidthHtml,
+                "value" : 1,
             }
         ))
     the_noi_dung = forms.CharField(
@@ -62,16 +78,18 @@ class AddTargetForm(forms.Form):
                 "class": "form-them-trang-web",
                 "id": "vungThemTrangWeb",
                 "placeholder": "<body class='page-folder ' data-source='Folder'>",
-                "style" : "width : 500px",
+                "style" : defaulWidthHtml,
             }
         ))
-    thu_tu_the_noi_dung = forms.CharField(
+    thu_tu_the_noi_dung = forms.IntegerField(
         required=False,
-        label="Thứ tự thử nội dung",
+        label="Thứ tự thẻ nội dung",
         widget=forms.TextInput(
             attrs={
                 "class": "form-them-trang-web",
                 "id": "domainDescription",
+                "style" : defaulWidthHtml,
+                "value" : 1,
             }
         ))
 

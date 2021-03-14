@@ -12,6 +12,8 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from trangWeb.forms import AddTargetForm, UpdateTargetForm
 from django.urls import reverse
+from .models import TrangWeb
+from django.utils import timezone
 
 def index(request):
     context = {
@@ -22,11 +24,15 @@ def them_trang_web_form(request):
     form = AddTargetForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
+            TrangWeb.objects.create(
+                **form.cleaned_data,
+                insert_date=timezone.now(),
+                trang_thai_chay = True)
             messages.add_message(
                 request,
                 messages.INFO,
                 'Target domain ' +
-                form.cleaned_data['domain_name'] +
+                form.cleaned_data['ten_trang_web'] +
                 ' added successfully')
             return http.HttpResponseRedirect(reverse('list_target'))
     context = {

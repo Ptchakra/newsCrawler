@@ -185,9 +185,16 @@ code {
 .widget-content-area {
   padding: 20px;
   position: relative;
+  color: red;
   background-color: #fff;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px; }
+
+  .widget-content-area .label{
+    color: white;
+    padding: 8px;
+    font-family: Arial;
+  }
 
 .content-area {
   max-width: 58.333333%;

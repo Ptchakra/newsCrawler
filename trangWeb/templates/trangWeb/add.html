@@ -20,4 +20,14 @@ Add target for crawler
 
 {% block page_level_script %}
 <script src="{% static 'assets/js/scrollspyNav.js' %}"></script>
+<script type="text/javascript">
+    // apex charts for vulnerability summary
+    function change_label_color(){
+        var label_tab = document.getElementsByTagName("label");
+        for (i = 0; i < label_tab.length; i++) {
+            label_tab[i].style.color = "black";
+            }
+    }
+    change_label_color()
+</script>
 {% endblock page_level_script %}

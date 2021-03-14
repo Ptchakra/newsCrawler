@@ -24,9 +24,12 @@ except ImportError:
 crawler html trang web lay link bai viet trong vung tin tuc
 '''
 def crawlerTrangWeb():
-    domain_trang_Web = 'https://vnexpress.net/thoi-su'
-    phan_tin_tuc = '<body class="page-folder " data-source="Folder">'
-    thu_tu_the_tin_tuc = 0
+    # domain_trang_Web = 'https://vnexpress.net/thoi-su'
+    # phan_tin_tuc = '<body class="page-folder " data-source="Folder">'
+    domain_trang_Web = 'https://zingnews.vn/sach-hay.html'
+    phan_tin_tuc = '<div class="page-wrapper">'
+    thu_tu_the_tin_tuc = 1
+    preHref_tag = 'https://zingnews.vn'
     # Lay tag cua the html bat dau cua vung tin tuc
     the_tin_tuc = phan_tin_tuc[1:-1].split(" ")[0]
     # Lay attrs cua phan the tin tuc
@@ -66,11 +69,13 @@ def crawlerTrangWeb():
     # print(danh_sach_href)
     print("---------------------")
     for tag in danh_sach_tag_co_href:
-        if validators.url(str(tag['href'])):
+        if validators.url(preHref_tag+str(tag['href'])):
+            print("if dau tien")
             if str(tag['href']).split('#')[0] not in danh_sach_href:
                 # print("0: ",str(tag['href']))
                 danh_sach_href.append(str(tag['href']))
-                crawlerBaiBao(str(tag['href']))
+                print("crawler call: ",preHref_tag+str(tag['href']))
+                crawlerBaiBao(preHref_tag+str(tag['href']))
 
     chuoi_href = '\n'.join(danh_sach_href)
     # print(danh_sach_href)
@@ -84,12 +89,16 @@ def crawlerTrangWeb():
 def crawlerBaiBao(link_trang_bai_viet):
     # link_trang_bai_viet = 'https://vnexpress.net/tuong-lop-cuu-nan-tren-nhung-cung-duong-deo-doc-4243437.html'
     if validators.url(link_trang_bai_viet):
-        the_tieu_de = '<h1 class="title-detail">'
-        thu_tu_the_tieu_de = 0
-        the_noi_dung = '<div class="sidebar-1">'
-        thu_tu_the_noi_dung = 0
+        # the_tieu_de = '<h1 class="title-detail">'
+        # thu_tu_the_tieu_de = 0
+        # the_noi_dung = '<div class="sidebar-1">'
+        # thu_tu_the_noi_dung = 0
         # the_tac_gia = '<strong>'
         # thu_tu_the_tac_gia = -1
+        the_tieu_de = '<h1 class="the-article-title">'
+        thu_tu_the_tieu_de = 0
+        the_noi_dung = '<article class="the-article type-text short">'
+        thu_tu_the_noi_dung = 0
 
         # Lay attrs cua phan the tieu de
         tag_tieu_de = the_tieu_de[1:-1].split(" ")[0]

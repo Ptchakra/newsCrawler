@@ -6,6 +6,7 @@ from datetime import datetime
 
 class TrangWeb(models.Model):
     ten_trang_web = models.CharField(max_length=300,primary_key=True,unique=True,db_index=True)
+    pre_href_tag = models.CharField(max_length=300)
     the_vung_tin_tuc = models.CharField(max_length=300)
     thu_tu_cua_the_vung_tin_tuc = models.IntegerField(default=0)
     the_tieu_de = models.CharField(max_length=300)
