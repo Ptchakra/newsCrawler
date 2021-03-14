@@ -33,9 +33,12 @@ INSTALLED_APPS = [
     'rest_framework_datatables',
     'dashboard.apps.DashboardConfig',
     'trangWeb.apps.TrangwebConfig',
+    'crispy_forms',
     'django_ace',
     'django_celery_beat',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -5,23 +5,29 @@ from .models import TrangWeb
 class AddTargetForm(forms.Form):
     link_trang_web = forms.CharField(
         required=True,
+        label='Link trang web',
         widget=forms.TextInput(
             attrs={
                 "class": "form-them-trang-web",
                 "id": "domainName",
-                "placeholder": "example.com"
+                "placeholder": "https://example.com/thoi-su",
+                "style" : "width : 500px",
             }
         ))
     vung_tin_tuc = forms.CharField(
         required=True,
+        label='Thẻ vùng tin tức',
         widget=forms.TextInput(
             attrs={
                 "class": "form-them-trang-web",
                 "id": "vungThemTrangWeb",
+                "placeholder": "<body class='page-folder ' data-source='Folder'>",
+                "style" : "width : 500px",
             }
         ))
     thu_tu_vung_tin_tuc = forms.CharField(
-        required=True,
+        required=False,
+        label='Thứ tự thẻ vùng tin tức',
         widget=forms.TextInput(
             attrs={
                 "class": "form-them-trang-web",
@@ -30,14 +36,18 @@ class AddTargetForm(forms.Form):
         ))
     the_tieu_de = forms.CharField(
         required=True,
+        label="Thẻ tiêu đề",
         widget=forms.TextInput(
             attrs={
                 "class": "form-them-trang-web",
                 "id": "vungThemTrangWeb",
+                "placeholder": "<body class='page-folder ' data-source='Folder'>",
+                "style" : "width : 500px",
             }
         ))
     thu_tu_the_tieu_de = forms.CharField(
-        required=True,
+        required=False,
+        label="Thứ tự thẻ tiêu đề",
         widget=forms.TextInput(
             attrs={
                 "class": "form-them-trang-web",
@@ -46,14 +56,18 @@ class AddTargetForm(forms.Form):
         ))
     the_noi_dung = forms.CharField(
         required=True,
+        label="Thẻ nội dung",
         widget=forms.TextInput(
             attrs={
                 "class": "form-them-trang-web",
                 "id": "vungThemTrangWeb",
+                "placeholder": "<body class='page-folder ' data-source='Folder'>",
+                "style" : "width : 500px",
             }
         ))
     thu_tu_the_noi_dung = forms.CharField(
-        required=True,
+        required=False,
+        label="Thứ tự thử nội dung",
         widget=forms.TextInput(
             attrs={
                 "class": "form-them-trang-web",

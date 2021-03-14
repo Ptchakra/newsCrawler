@@ -10,21 +10,7 @@
         <div class="widget-content widget-content-area">
                 <form class="simple-example" method="POST">
                 {% csrf_token %}
-                <div class="form-row">
-                    <div class="col-md-6 mb-4">
-                        <label for="domainName">Domain name</label>
-                        {{ form.link_trang_web }}
-                        {% if form.errors %}
-                            <div class="invalid-feedback" style="display: block;">
-                                {{ form.errors.link_trang_web|striptags }}
-                            </div>
-                        {% endif %}
-                    </div>
-                    <div class="col-md-6 mb-4">
-                        <label for="domainDescription">Description</label>
-                        {{ form.domain_description }}
-                    </div>
-                </div>
+                <table>{{ form.as_table }}</table>
                 <button class="btn btn-primary submit-fn mt-2 float-right" type="submit">{{button_title}}</button>
             </form>
         </div>
