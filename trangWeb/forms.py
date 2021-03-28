@@ -15,17 +15,6 @@ class AddTargetForm(forms.Form):
                 "style" : defaulWidthHtml,
             }
         ))
-    preHref_tag_vung_tin_tuc = forms.CharField(
-        required=False,
-        label='Đầu thẻ href',
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-them-trang-web",
-                "id": "domainName",
-                "placeholder": "Link đầu chuỗi cho thẻ Href (nếu href có dạng /abc.html)",
-                "style" : defaulWidthHtml,
-            }
-        ))
     vung_tin_tuc = forms.CharField(
         required=True,
         label='Thẻ vùng tin tức',

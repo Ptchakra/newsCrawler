@@ -7,8 +7,13 @@ Dashboard
 {% endblock title %}
 
 {% block custom_js_css_link %}
+<link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
+<link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+<link href="{% static 'assets/dashboard/css/black-dashboard.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/dashboard/demo/demo.css' %}" rel="stylesheet" />
 <link href="{% static 'assets/css/dashboard/dash_1.css' %}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="{% static 'assets/css/elements/alert.css' %}">
+
 {% endblock custom_js_css_link %}
 
 {% block breadcrumb_title %}
@@ -16,83 +21,195 @@ Dashboard
 {% endblock breadcrumb_title %}
 
 {% block main_content %}
-<div class="col-lg-12 layout-px-spacing">
-    <div class="row layout-top-spacing">
-        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
-            <div class="row widget-statistic">
-                <div class="col layout-top-spacing">
-                    <div class="widget-chart widget-chart_hybrid widget-warning">
-                        <div class="widget-heading">
-                            <div class="w-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chrome"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="21.17" y1="8" x2="12" y2="8"></line><line x1="3.95" y1="6.06" x2="8.54" y2="14"></line><line x1="10.88" y1="21.94" x2="15.46" y2="14"></line></svg>
-                            </div>
-                            <span>Alive Subdomains: <span><b class="text-warning">{{count_trang_web|intcomma}}</b><br>
-                        </div>
-                        <div class="widget-content">
-                            <div class="w-chart">
-                                <div id="count_trang_web_chart"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>
+<div class="main-panel">
+	<div class="content">
+	  <div class="row">
+		<div class="col-12">
+		  <div class="card card-chart">
+			<div class="card-header ">
+			  <div class="row">
+				<div class="col-sm-6 text-left">
+				  <h5 class="card-category">Last 14 day crawler</h5>
+				  <h2 class="card-title">News</h2>
+				</div>
+			  </div>
+			</div>
+			<div class="card-body">
+			  <div class="chart-area">
+				<canvas id="chartBig1"></canvas>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  <div class="row">
+		<div class="col-lg-7 col-md-12">
+		  <div class="card card-chart">
+			<div class="card-header">
+			  <h5 class="card-category">Top 10 best website</h5>
+			</div>
+			<div class="card-body">
+			  <div class="chart-area">
+				<canvas id="CountryChart"></canvas>
+			  </div>
+			</div>
+		  </div>
+		</div>
+		<div class="col-lg-5 col-md-12">
+			<div class="card ">
+			  <div class="card-header">
+				<h4 class="card-title"> Top newest news</h4>
+			  </div>
+			  <div id="slideshow">
+				<div class="slide-wrapper">
+				  	<div class="slide">Trình Trung ương nhân sự 3 chức danh lãnh đạo cao nhất của Nhà nước</div>
+				  	<div class="slide">TP HCM có 'ATM nhận trả hồ sơ'</div>
+					<div class="slide">Tư vấn độc lập tham gia điều tra sự cố Metro Số 1</div>
+				</div>
+			  </div>
+			</div>
+		  </div>
+	</div>
+  </div>
 {% endblock main_content %}
 
 {% block page_level_script %}
 <script src="{% static 'plugins/apex/apexchart.min.js' %}"></script>
-<script type="text/javascript">
+<script src="{% static 'assets/dashboard/js/core/jquery.min.js' %}"></script>
+<script src="{% static 'assets/dashboard/js/core/popper.min.js' %}"></script>
+<!-- <script src="{% static 'assets/dashboard/js/core/bootstrap.min.js' %}"></script> -->
+<script src="{% static 'assets/dashboard/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
+<!-- Chart JS -->
+<script src="{% static 'assets/dashboard/js/plugins/chartjs.min.js' %}"></script>
+<!--  Notifications Plugin    -->
+<script src="{% static 'assets/dashboard/js/plugins/bootstrap-notify.js' %}"></script>
+<!-- Control Center for Black Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="{% static 'assets/dashboard/js/black-dashboard.min.js' %}"></script><!-- Black Dashboard DEMO methods, don't include it in your project! -->
+<script src="{% static 'assets/dashboard/demo/demo.js' %}"></script>
+<script>
+  $(document).ready(function() {
+	$().ready(function() {
+	  $sidebar = $('.sidebar');
+	  $navbar = $('.navbar');
+	  $main_panel = $('.main-panel');
 
-var label_dates = ['{{top_trang_web.4}}', '{{top_trang_web.3}}', '{{top_trang_web.2}}', '{{top_trang_web.1}}', '{{top_trang_web.0}}'];
+	  $full_page = $('.full-page');
 
-var fill_options = {
-	type:"gradient",
-	gradient: {
-		type: "vertical",
-		shadeIntensity: 1,
-		inverseColors: !1,
-		opacityFrom: .40,
-		opacityTo: .05,
-		stops: [45, 100]
-	}
-}
-var count_trang_web_chart_option = {
-	chart: {
-		id: 'sparkline1',
-		type: 'area',
-		height: 200,
-		width : 400,
-		sparkline: {
-			enabled: true
-		},
-	},
-	stroke: {
-		curve: 'smooth',
-		width: 2,
-	},
-	series: [{
-		name: 'Target added',
-		data: [{{top_trang_web.0}},{{top_trang_web.1}},{{top_trang_web.2}},{{top_trang_web.3}},{{top_trang_web.4}}]
-	}],
-	labels: label_dates,
-	yaxis: {
-		min: 0
-	},
-	colors: ['#1b55e2'],
-	tooltip: {
-		x: {
-			show: true,
+	  $sidebar_responsive = $('body > .navbar-collapse');
+	  sidebar_mini_active = true;
+	  white_color = false;
+
+	  window_width = $(window).width();
+
+	  fixed_plugin_open = $('.sidebar .sidebar-wrapper .nav li.active a p').html();
+
+
+
+	  $('.fixed-plugin a').click(function(event) {
+		if ($(this).hasClass('switch-trigger')) {
+		  if (event.stopPropagation) {
+			event.stopPropagation();
+		  } else if (window.event) {
+			window.event.cancelBubble = true;
+		  }
 		}
-	},
-	fill: fill_options,
-}
+	  });
 
-var chart = new ApexCharts(document.querySelector("#count_trang_web_chart"), count_trang_web_chart_option);
-chart.render();
+	  $('.fixed-plugin .background-color span').click(function() {
+		$(this).siblings().removeClass('active');
+		$(this).addClass('active');
+
+		var new_color = $(this).data('color');
+
+		if ($sidebar.length != 0) {
+		  $sidebar.attr('data', new_color);
+		}
+
+		if ($main_panel.length != 0) {
+		  $main_panel.attr('data', new_color);
+		}
+
+		if ($full_page.length != 0) {
+		  $full_page.attr('filter-color', new_color);
+		}
+
+		if ($sidebar_responsive.length != 0) {
+		  $sidebar_responsive.attr('data', new_color);
+		}
+	  });
+
+	  $('.switch-sidebar-mini input').on("switchChange.bootstrapSwitch", function() {
+		var $btn = $(this);
+
+		if (sidebar_mini_active == true) {
+		  $('body').removeClass('sidebar-mini');
+		  sidebar_mini_active = false;
+		  blackDashboard.showSidebarMessage('Sidebar mini deactivated...');
+		} else {
+		  $('body').addClass('sidebar-mini');
+		  sidebar_mini_active = true;
+		  blackDashboard.showSidebarMessage('Sidebar mini activated...');
+		}
+
+		// we simulate the window Resize so the charts will get updated in realtime.
+		var simulateWindowResize = setInterval(function() {
+		  window.dispatchEvent(new Event('resize'));
+		}, 180);
+
+		// we stop the simulation of Window Resize after the animations are completed
+		setTimeout(function() {
+		  clearInterval(simulateWindowResize);
+		}, 1000);
+	  });
+
+	  $('.switch-change-color input').on("switchChange.bootstrapSwitch", function() {
+		var $btn = $(this);
+
+		if (white_color == true) {
+
+		  $('body').addClass('change-background');
+		  setTimeout(function() {
+			$('body').removeClass('change-background');
+			$('body').removeClass('white-content');
+		  }, 900);
+		  white_color = false;
+		} else {
+
+		  $('body').addClass('change-background');
+		  setTimeout(function() {
+			$('body').removeClass('change-background');
+			$('body').addClass('white-content');
+		  }, 900);
+
+		  white_color = true;
+		}
 
 
+	  });
+
+	  $('.light-badge').click(function() {
+		$('body').addClass('white-content');
+	  });
+
+	  $('.dark-badge').click(function() {
+		$('body').removeClass('white-content');
+	  });
+	});
+  });
+</script>
+<script>
+  $(document).ready(function() {
+	// Javascript method's body can be found in assets/js/demos.js
+	demo.initDashboardPageCharts();
+
+  });
+</script>
+<script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+<script>
+  window.TrackJS &&
+	TrackJS.install({
+	  token: "ee6fab19c5a04ac1a32a645abde4613a",
+	  application: "black-dashboard-free"
+	});
 </script>
 {% endblock page_level_script %}

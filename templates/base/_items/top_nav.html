@@ -1,3 +1,4 @@
+  
 {% load static %}
 <div class="header-container fixed-top">
     <header class="header navbar navbar-expand-sm">
@@ -8,7 +9,27 @@
                 </a>
             </li>
             <li class="nav-item theme-text">
-                <a href="{% url 'dashboardIndex' %}" class="nav-link"> reNgine </a>
+            <a href="{% url 'dashboardIndex' %}" class="nav-link"> reNgine </a>
+            </li>
+        </ul>
+        <ul class="navbar-item theme-brand flex-row  text-center ml-md-auto">
+            <li class="nav-item theme-logo">
+                <h4 style="text-align:center; border:2px"><a href="{% url 'them_trang_web_form' %}"> Thêm Trang Web </a></h4>
+            </li>
+        </ul>
+        <ul class="navbar-item theme-brand flex-row  text-center ml-md-auto">
+            <li class="nav-item theme-logo">
+               <h4> <a href="{% url 'them_trang_web_form' %}"> Danh Sách Bài Viết </a></h4>
+            </li>
+        </ul>
+        <ul class="navbar-item theme-brand flex-row  text-center ml-md-auto">
+            <li class="nav-item theme-logo">
+            <h4><a href="{% url 'them_trang_web_form' %}"> Thêm Từ Khóa Nổi Bật </a></h4>
+            </li>
+        </ul>
+        <ul class="navbar-item theme-brand flex-row  text-center ml-md-auto">
+            <li class="nav-item theme-logo">
+            <h4><a href="{% url 'them_trang_web_form' %}"> Thêm Từ Khóa Nổi Bật </a></h4>
             </li>
         </ul>
         <ul class="navbar-item flex-row ml-md-auto">
