@@ -131,7 +131,9 @@ code {
   margin-top: 20px; }
 
 .layout-spacing {
-  padding-bottom: 40px; }
+  padding-bottom: 40px; 
+  padding-top: 50px;
+}
 
 .layout-px-spacing {
   padding: 0 20px 0 18px !important;
