@@ -15,7 +15,7 @@ class AddTargetForm(forms.Form):
                 "style" : defaulWidthHtml,
             }
         ))
-    vung_tin_tuc = forms.CharField(
+    the_vung_tin_tuc = forms.CharField(
         required=True,
         label='Thẻ vùng tin tức',
         widget=forms.TextInput(
@@ -26,7 +26,7 @@ class AddTargetForm(forms.Form):
                 "style" : defaulWidthHtml,
             }
         ))
-    thu_tu_vung_tin_tuc = forms.IntegerField(
+    thu_tu_cua_the_vung_tin_tuc = forms.IntegerField(
         required=False,
         label='Thứ tự thẻ vùng tin tức',
         widget=forms.TextInput(
@@ -48,7 +48,7 @@ class AddTargetForm(forms.Form):
                 "style" : defaulWidthHtml,
             }
         ))
-    thu_tu_the_tieu_de = forms.IntegerField(
+    thu_tu_cua_the_tieu_de = forms.IntegerField(
         required=False,
         label="Thứ tự thẻ tiêu đề",
         widget=forms.TextInput(
@@ -57,6 +57,7 @@ class AddTargetForm(forms.Form):
                 "id": "domainDescription",
                 "style" : defaulWidthHtml,
                 "value" : 1,
+                
             }
         ))
     the_noi_dung = forms.CharField(

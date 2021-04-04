@@ -5,19 +5,20 @@ from datetime import datetime
 
 
 class TrangWeb(models.Model):
-    ten_trang_web = models.CharField(max_length=300,primary_key=True,unique=True,db_index=True)
-    pre_href_tag = models.CharField(max_length=300)
+    link_trang_web = models.CharField(max_length=300,primary_key=True,unique=True,db_index=True)
     the_vung_tin_tuc = models.CharField(max_length=300)
     thu_tu_cua_the_vung_tin_tuc = models.IntegerField(default=0)
     the_tieu_de = models.CharField(max_length=300)
     thu_tu_cua_the_tieu_de = models.IntegerField(default=0)
-    the_tac_gia = models.CharField(max_length=300)
-    thu_tu_cua_the_tac_gia = models.IntegerField(default=0)
+    the_noi_dung = models.CharField(max_length=300)
+    thu_tu_the_noi_dung = models.IntegerField(default=0)
+    # the_tac_gia = models.CharField(max_length=300)
+    # thu_tu_cua_the_tac_gia = models.IntegerField(default=0)
     ngay_them = models.DateTimeField(default=datetime.now().strftime('%d-%m-%Y %H:%M:%S'))
     trang_thai_chay = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.ten_trang_web
+        return self.link_trang_web
     
 class BaiBao(models.Model):
     ten_trang_web = models.ForeignKey(TrangWeb,on_delete=models.CASCADE, null=False)

@@ -9,7 +9,7 @@ from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_out, user_logged_in
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
+import validators
 from trangWeb.forms import AddTargetForm, UpdateTargetForm
 from django.urls import reverse
 from .models import TrangWeb
@@ -22,19 +22,31 @@ def index(request):
 
 def them_trang_web_form(request):
     form = AddTargetForm(request.POST or None)
+    print("them trang web form")
     if request.method == "POST":
         if form.is_valid():
-            TrangWeb.objects.create(
-                **form.cleaned_data,
-                insert_date=timezone.now(),
-                trang_thai_chay = True)
-            messages.add_message(
-                request,
-                messages.INFO,
-                'Target domain ' +
-                form.cleaned_data['ten_trang_web'] +
-                ' added successfully')
-            return http.HttpResponseRedirect(reverse('list_target'))
+            print("form clean data ----", form.cleaned_data["link_trang_web"])
+            if validators.url(form.cleaned_data["link_trang_web"]):
+                if not bool(TrangWeb.objects.filter(link_trang_web=form.cleaned_data["link_trang_web"])):
+                    TrangWeb.objects.create(
+                        **form.cleaned_data,
+                        ngay_them=timezone.now(),
+                        trang_thai_chay = True)
+                    messages.add_message(
+                        request,
+                        messages.INFO,
+                        'Target domain ' +
+                        form.cleaned_data['link_trang_web'] +
+                        ' added successfully')
+                    return http.HttpResponseRedirect(reverse('danh_sach_trang_web'))
+                else:
+                    messages.add_message(
+                        request,
+                        messages.INFO,
+                        'Target domain ' +
+                        form.cleaned_data['link_trang_web'] +
+                        ' have already exist')
+                    return http.HttpResponseRedirect(reverse('danh_sach_trang_web'))
     context = {
         "add_target_li": "active",
         "target_data_active": "true",

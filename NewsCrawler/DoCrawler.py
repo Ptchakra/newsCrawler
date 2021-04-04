@@ -1,3 +1,4 @@
+from asyncio.tasks import sleep
 from re import findall
 from django.conf import settings
 from django.utils import timezone, dateformat
@@ -7,13 +8,15 @@ import traceback
 import yaml
 import json
 import bs4
-from bs4 import NavigableString
+from celery import shared_task
+from NewsCrawler.celery import app
 import re
 from datetime import datetime
 import time
 import requests
 import validators
 from urllib.request import urlopen
+from background_task import background
 try: 
     from BeautifulSoup import BeautifulSoup
 except ImportError:
@@ -23,6 +26,14 @@ except ImportError:
 '''
 crawler html trang web lay link bai viet trong vung tin tuc
 '''
+
+@app.task
+def crawler_handler():
+    while True:
+        print("handler print")
+        sleep(5)
+
+
 def crawlerTrangWeb():
     # domain_trang_Web = 'https://vnexpress.net/thoi-su'
     # phan_tin_tuc = '<body class="page-folder " data-source="Folder">'
