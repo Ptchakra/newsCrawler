@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django_ace',
     'django_celery_beat',
     'background_task',
+    'django_celery_results',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -97,7 +98,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'daylapasscuapostgres_hieu@#123',
+        'PASSWORD': 'Cong@1234',
         'HOST': 'localhost',
         'PORT': 5432,
     }
@@ -165,7 +166,14 @@ LOGOUT_REDIRECT_URL = 'login'
 '''
 CELERY settings
 '''
-CELERY_BROKER_URL = 'redis://redis:6379'
-CELERY_RESULT_BACKEND = 'redis://redis:6379'
+CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_ENABLE_UTC = False
 CELERY_TIMEZONE = 'UTC'
+
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+CELERY_TASK_TRACK_STARTED = True

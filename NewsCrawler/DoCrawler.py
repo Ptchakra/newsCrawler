@@ -8,8 +8,6 @@ import traceback
 import yaml
 import json
 import bs4
-from celery import shared_task
-from NewsCrawler.celery import app
 import re
 from datetime import datetime
 import time
@@ -22,16 +20,16 @@ try:
 except ImportError:
     from bs4 import BeautifulSoup
 
+from celery.decorators import task
 
 '''
 crawler html trang web lay link bai viet trong vung tin tuc
 '''
 
-@app.task
+@task(name="crawler_handler")
 def crawler_handler():
-    while True:
-        print("handler print")
-        sleep(5)
+    print("handler print")
+    sleep(5)
 
 
 def crawlerTrangWeb():
