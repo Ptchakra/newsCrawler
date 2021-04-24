@@ -12,7 +12,7 @@ from django.contrib.auth import update_session_auth_hash
 import validators
 from trangWeb.forms import AddTargetForm, UpdateTargetForm
 from django.urls import reverse
-from .models import TrangWeb, top50, so_bai_tung_trang, tong_bai_hang_ngay
+from .models import TrangWeb, top50, so_bai_tung_trang, tong_bai_hang_ngay, BaiBao
 from django.utils import timezone
 from datetime import datetime
 
@@ -65,10 +65,21 @@ def danh_sach_trang_web(request):
 
 
 def danh_sach_bai_bao(request):
-    print(request)
+    baibao  = BaiBao.objects.filter().order_by("-ngay_them")[:10]
+    so_bai_bao = BaiBao.objects.count()
+    so_page =  int(int(so_bai_bao + 9)/10)
+    tu_bai = 10
+    now_page = 1   
+    den_bai = 20
     context = {
         'list_target_li': 'active',
-        'target_data_active': 'true'}
+        'target_data_active': 'true',
+        'bai_bao':baibao,
+        'so_bai_bao': so_bai_bao,
+        'so_page': so_page,
+        'now_page': now_page,
+        'tu_bai': tu_bai,
+        'den_bai': den_bai}
     return render(request, 'baiBao/list.html', context)
 
 def sua_trang_web_form(request, id):
