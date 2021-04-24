@@ -6,15 +6,66 @@ from django.contrib.auth.signals import user_logged_out, user_logged_in
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-
-
+from trangWeb.models import TrangWeb, BaiBao, tong_bai_hang_ngay, tu_khoa, top50, so_bai_tung_trang
+from datetime import timedelta
 def index(request):
+
+    bai_viet_10_ngay = tong_bai_hang_ngay.objects.filter().order_by("-ngay_them")[:10]
+    # print(str(so_bai_10_ngay))
+    # print(type(bai_viet_10_ngay))
+    so_bai_10_ngay = []
+    ten_10_ngay = []
+    if(bai_viet_10_ngay.count()<10):
+        lastday = 0
+        for bai_viet in bai_viet_10_ngay:
+            so_bai_10_ngay.append(bai_viet.so_bai_viet)
+            ten_10_ngay.append(f"{bai_viet.ngay_them.astimezone().day}.{bai_viet.ngay_them.astimezone().month}")
+            lastday = bai_viet.ngay_them.astimezone()
+        for i in range(bai_viet_10_ngay.count(),10):
+            so_bai_10_ngay.append(0)
+            lastday = lastday - timedelta(days=1)
+            ten_10_ngay.append(f"{lastday.day}.{lastday.month}")
+            
+    else:
+        for bai_viet in bai_viet_10_ngay[:10]:
+            so_bai_10_ngay.append(bai_viet.so_bai_viet)
+            ten_10_ngay.append(f"{bai_viet.ngay_them.astimezone().day}.{bai_viet.ngay_them.astimezone().month}")
+    
+    so_bai_10_ngay.reverse()
+    ten_10_ngay.reverse()
+    print(so_bai_10_ngay)
+    print(ten_10_ngay)
+    
+
+    top_10_trang_web =  so_bai_tung_trang.objects.filter().order_by("-so_bai_viet")
+    if top_10_trang_web.count() > 10:
+        top_10_trang_web = top_10_trang_web[0:10]
+    so_bai_top_10_trang_web = []
+    ten_top_10_trang_web = []
+    for i in top_10_trang_web:
+        so_bai_top_10_trang_web.append(i.so_bai_viet)
+        ten_top_10_trang_web.append(i.trang_web)
+    
+    print(so_bai_top_10_trang_web)
+    print(ten_top_10_trang_web)
+
+    top_50_bai_moi = top50.objects.filter().order_by("ngay_them")
+    top50_tieu_de = []
+    top50_link = []
+    for i in top_50_bai_moi:
+        top50_tieu_de.append(i.tieu_de)
+        top50_link.append(i.link_bai_bao)
+    
+    print(top50_tieu_de)
+    print(top50_link)
     context = {
         'dashboard_data_active': 'true',
-        'count_trang_web' : 10,
-        'top_trang_web' : [20,10,5,20,6],
-        'top_bai_bao' : [20,10,5,20,6,3,5,12,18],
-        'count_bai_bao' : 1235,
+        'so_bai_10_ngay' : so_bai_10_ngay,
+        'ten_10_ngay' : ten_10_ngay,
+        'top_10_trang_web' : so_bai_top_10_trang_web,
+        'ten_10_trang_web' : ten_top_10_trang_web,
+        'top_bai_bao' : so_bai_top_10_trang_web,
+        'tu_khoa' : '',
         }
     return render(request, 'dashboard/index.html', context)
 

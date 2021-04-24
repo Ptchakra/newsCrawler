@@ -1158,3 +1158,8 @@ code {
       right: 83px; }
   .footer-wrapper .footer-section.f-section-2 {
     display: none; } }
+
+
+.slide{
+  min-height: 42px;
+}

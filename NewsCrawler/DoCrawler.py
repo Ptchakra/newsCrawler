@@ -1,8 +1,8 @@
+from __future__ import absolute_import, unicode_literals
 from asyncio.tasks import sleep
 from re import findall
 from django.conf import settings
 from django.utils import timezone, dateformat
-from datetime import datetime
 import os
 import traceback
 import yaml
@@ -14,102 +14,71 @@ import time
 import requests
 import validators
 from urllib.request import urlopen
-from background_task import background
 try: 
     from BeautifulSoup import BeautifulSoup
 except ImportError:
     from bs4 import BeautifulSoup
 
-from celery.decorators import task
+# from trangWeb.models import TrangWeb
+from celery import shared_task
+import time
 
-'''
-crawler html trang web lay link bai viet trong vung tin tuc
-'''
 
-@task(name="crawler_handler")
 def crawler_handler():
-    print("handler print")
-    sleep(5)
+    print("chay crawler")
+    run_crawler()
+    print("end chayj crawler")
 
-
-def crawlerTrangWeb():
-    # domain_trang_Web = 'https://vnexpress.net/thoi-su'
-    # phan_tin_tuc = '<body class="page-folder " data-source="Folder">'
-    domain_trang_Web = 'https://zingnews.vn/sach-hay.html'
-    phan_tin_tuc = '<div class="page-wrapper">'
-    thu_tu_the_tin_tuc = 1
-    preHref_tag = 'https://zingnews.vn'
+def run_crawler():
+    from trangWeb.models import TrangWeb
+    danh_sach_trang_web = TrangWeb.objects.filter(trang_thai_chay=True)
+    print(danh_sach_trang_web)
+    for trang_web in danh_sach_trang_web:
+        crawlerTrangWeb(trang_web.link_trang_web, trang_web.the_vung_tin_tuc, trang_web.thu_tu_cua_the_vung_tin_tuc -1, trang_web.the_tieu_de, trang_web.thu_tu_cua_the_tieu_de -1 , trang_web.the_noi_dung, trang_web.thu_tu_the_noi_dung -1)
+ 
+def crawlerTrangWeb(link_trang_web, the_vung_tin_tuc, thu_tu_cua_the_vung_tin_tuc, the_tieu_de, thu_tu_cua_the_tieu_de, the_noi_dung, thu_tu_the_noi_dung):
+    from trangWeb.models import TrangWeb, BaiBao
+    domain_web = link_trang_web.split('/')[2]
+    preHref_tag = f"https://{domain_web}"
     # Lay tag cua the html bat dau cua vung tin tuc
-    the_tin_tuc = phan_tin_tuc[1:-1].split(" ")[0]
+    the_tin_tuc = the_vung_tin_tuc[1:-1].split(" ")[0]
     # Lay attrs cua phan the tin tuc
-    parse_html_thiet_dat_phan_tin_tuc = BeautifulSoup(phan_tin_tuc, 'html.parser')
+    parse_html_thiet_dat_phan_tin_tuc = BeautifulSoup(the_vung_tin_tuc, 'html.parser')
     attrs_the_tin_tuc = parse_html_thiet_dat_phan_tin_tuc.contents[0].attrs
     # Lay html cua trang web
-    html_trang_web = requests.get(domain_trang_Web)
+    html_trang_web = requests.get(link_trang_web)
     # Lay html cua vung tin tuc
-    html_tin_tuc = BeautifulSoup(html_trang_web.text, 'html.parser').find_all(the_tin_tuc, attrs_the_tin_tuc)[thu_tu_the_tin_tuc]
-    # print(html_tin_tuc)
-
-    # write html
-    # html_output_path = './crawler_results/temp1.html'
-    # with open(html_output_path,'w',encoding="utf-8") as temp:
-    #     temp.write(str(html_tin_tuc))
-
+    html_tin_tuc = BeautifulSoup(html_trang_web.text, 'html.parser').find_all(the_tin_tuc, attrs_the_tin_tuc)[thu_tu_cua_the_vung_tin_tuc]
+ 
     danh_sach_tag_xoa = ['meta','nav', 'picture', 'img', 'source', 'script', 'video', 'progress', 'use', 'svg', 'noscript', 'form', 'header', 'ul']
 
     # Xoa tag ra khoi html
     for tag in html_tin_tuc.find_all(danh_sach_tag_xoa):
         tag.extract()
 
-    # write html
-    html_output_path = './crawler_results/temp2.html'
-    with open(html_output_path,'w',encoding="utf-8") as temp:
-        temp.write(str(html_tin_tuc))
-
     # Lay all href
     danh_sach_tag_co_href = html_tin_tuc.find_all(href=re.compile('.+'))
-    danh_sach_href = []
-    try:
-        with open('./crawler_results/danh_sach_href.txt','r',encoding="utf-8") as file_href:
-            noi_dung_file = file_href.read()
-            danh_sach_href = noi_dung_file.split("\n")
-    except:
-        print("chua co file href thoi")
-    # print(danh_sach_href)
     print("---------------------")
     for tag in danh_sach_tag_co_href:
-        if validators.url(preHref_tag+str(tag['href'])):
-            print("if dau tien")
-            if str(tag['href']).split('#')[0] not in danh_sach_href:
-                # print("0: ",str(tag['href']))
-                danh_sach_href.append(str(tag['href']))
-                print("crawler call: ",preHref_tag+str(tag['href']))
-                crawlerBaiBao(preHref_tag+str(tag['href']))
+        link_bai_bao = str(tag['href'])
+        if link_bai_bao[0] != 'h':
+            link_bai_bao= str(preHref_tag) + link_bai_bao.lstrip('.')
+        link_bai_bao = link_bai_bao.split('#')[0]
+        if validators.url(link_bai_bao):
+            if BaiBao.objects.filter(link_bai_bao=link_bai_bao).count() == 0:
+                # danh_sach_href.append(str(tag['href']))
+                # print(f"{link_bai_bao} soluong {BaiBao.objects.filter(link_bai_bao=link_bai_bao).count()}")
+                try :
+                    crawlerBaiBao(link_trang_web, link_bai_bao, the_tieu_de, thu_tu_cua_the_tieu_de, the_noi_dung, thu_tu_the_noi_dung)
+                except Exception as e: 
+                    print(e)
 
-    chuoi_href = '\n'.join(danh_sach_href)
-    # print(danh_sach_href)
-    # write html
-    html_output_path = './crawler_results/danh_sach_href.txt'
-    with open(html_output_path,'w',encoding="utf-8") as temp:
-        temp.write(str(chuoi_href))
-        
-
-
-def crawlerBaiBao(link_trang_bai_viet):
+def crawlerBaiBao(link_trang_web, link_trang_bai_viet, the_tieu_de, thu_tu_the_tieu_de, the_noi_dung, thu_tu_the_noi_dung):
     # link_trang_bai_viet = 'https://vnexpress.net/tuong-lop-cuu-nan-tren-nhung-cung-duong-deo-doc-4243437.html'
     if validators.url(link_trang_bai_viet):
-        # the_tieu_de = '<h1 class="title-detail">'
-        # thu_tu_the_tieu_de = 0
-        # the_noi_dung = '<div class="sidebar-1">'
-        # thu_tu_the_noi_dung = 0
-        # the_tac_gia = '<strong>'
-        # thu_tu_the_tac_gia = -1
-        the_tieu_de = '<h1 class="the-article-title">'
-        thu_tu_the_tieu_de = 0
-        the_noi_dung = '<article class="the-article type-text short">'
-        thu_tu_the_noi_dung = 0
-
+        print(f"link trang web {link_trang_bai_viet}")
         # Lay attrs cua phan the tieu de
+        from trangWeb.models import BaiBao, so_bai_tung_trang, tong_bai_hang_ngay, TrangWeb, top50
         tag_tieu_de = the_tieu_de[1:-1].split(" ")[0]
         parse_html_thiet_dat_phan_tieu_de = BeautifulSoup(the_tieu_de, 'html.parser')
         attrs_the_tieu_de = parse_html_thiet_dat_phan_tieu_de.contents[0].attrs
@@ -129,30 +98,24 @@ def crawlerBaiBao(link_trang_bai_viet):
         html_trang_bai_bao = BeautifulSoup(html_trang_bai_bao.text, 'html.parser')
 
         #Lay tac gia
-        # print(link_trang_bai_viet)
-        # print(html_trang_bai_bao.find_all(tag_tac_gia, attrs_the_tac_gia))
         # try:
         #     ten_tac_gia = html_trang_bai_bao.find_all(tag_tac_gia, attrs_the_tac_gia)[thu_tu_the_tac_gia]
         #     ten_tac_gia = str(ten_tac_gia.text)
         # except:
         #     ten_tac_gia = ''
-        # write html
-        # html_output_path = './crawler_results/temp1.txt'
-        # with open(html_output_path,'w',encoding="utf-8") as temp:
-        #     temp.write(str(ten_tac_gia))
+
         # Lay tieu de
         try:
+            print(the_tieu_de)
             tieu_de_bai_bao = html_trang_bai_bao.find_all(tag_tieu_de, attrs_the_tieu_de)[thu_tu_the_tieu_de]
             tieu_de_bai_bao = str(tieu_de_bai_bao.text)
+            print(tieu_de_bai_bao)
+            print("=============================")
         except:
-            tieu_de_bai_bao = 'dinh danh tieu de khong dung cho trang: '+link_trang_bai_viet
-        # write html
-        # html_output_path = './crawler_results/temp2.txt'
-        # with open(html_output_path,'w',encoding="utf-8") as temp:
-        #     temp.write(str(tieu_de_bai_bao))
+            tieu_de_bai_bao = link_trang_bai_viet
+            print("deco co ==============================")
 
         # Lay noi dung bai bao
-    # try:
         noi_dung_bai_bao = html_trang_bai_bao.find_all(tag_noi_dung, attrs_the_noi_dung)[thu_tu_the_noi_dung]
         
         danh_sach_tag_xoa = ['meta','nav', 'picture', 'img', 'source', 'script', 'video', 'progress', 'use', 'svg', 'noscript', 'form', 'ul', 'a', 'header']
@@ -163,25 +126,31 @@ def crawlerBaiBao(link_trang_bai_viet):
         for tag in noi_dung_bai_bao.find_all('p'):
             new_string = '\n\n' + str(tag.text)
             tag.string = new_string
-            # print('tag str: ',tag.text)
-        html_output_path = './crawler_results/temp1.html'
-        with open(html_output_path,'w',encoding="utf-8") as temp:
-            temp.write(str(noi_dung_bai_bao))
         noi_dung_bai_bao = str(noi_dung_bai_bao.text)
         noi_dung_bai_bao = noi_dung_bai_bao.split('\n')
         noi_dung_bai_bao = list(filter(('').__ne__, noi_dung_bai_bao))
         noi_dung_bai_bao = '\n'.join(noi_dung_bai_bao)
-        print(noi_dung_bai_bao.replace('\n','\\n '))
-    # except:
-    #     noi_dung_bai_bao = 'dinh dang noi dung khong dung cho trang: '+link_trang_bai_viet
-        # print('noi dung: ',noi_dung_bai_bao)
         if noi_dung_bai_bao != '':
-            now = datetime.now()
-            time = now.strftime("%H%M%S%f")
-            # write html
-            html_output_path = './crawler_results/'+time+'.txt'
-            with open(html_output_path,'w',encoding="utf-8") as temp:
-                temp.writelines(str(noi_dung_bai_bao))
+            bai_moi = BaiBao.objects.create(ten_trang_web= TrangWeb.objects.filter(link_trang_web=link_trang_web)[0], link_bai_bao=link_trang_bai_viet, tieu_de= tieu_de_bai_bao, ngay_them=datetime.now(), noi_dung=noi_dung_bai_bao)
+            bai_moi.save()
+            try:
+                so_bai_moi_trang = so_bai_tung_trang.objects.filter(trang_web=link_trang_web)[0]
+            except:
+                so_bai_moi_trang = so_bai_tung_trang.objects.create(trang_web=link_trang_web, so_bai_viet=0)
+            # so_bai_moi_trang.so_bai_viet.values
+            so_bai_moi_trang.so_bai_viet = so_bai_moi_trang.so_bai_viet + 1
+            so_bai_moi_trang.save()
+            try:
+                tong_bai  = tong_bai_hang_ngay.objects.filter(ngay_them= datetime.now().strftime('%Y-%m-%d'))[0]
+            except:
+                tong_bai  = tong_bai_hang_ngay.objects.create(so_bai_viet=0,ngay_them=datetime.now().strftime('%Y-%m-%d'))
+            tong_bai.so_bai_viet = tong_bai.so_bai_viet + 1 
+            tong_bai.save()
 
-if __name__ == '__main__':
-    crawlerTrangWeb()
+            if top50.objects.all().count() < 50:
+                print(tieu_de_bai_bao)
+                top50.objects.create(ten_trang_web= TrangWeb.objects.filter(link_trang_web=link_trang_web)[0], link_bai_bao=link_trang_bai_viet, tieu_de= tieu_de_bai_bao, ngay_them=datetime.now(), noi_dung=noi_dung_bai_bao)
+            else:
+                top50.objects.first().delete()
+                top50.objects.create(ten_trang_web= TrangWeb.objects.filter(link_trang_web=link_trang_web)[0], link_bai_bao=link_trang_bai_viet, tieu_de= tieu_de_bai_bao, ngay_them=datetime.now(), noi_dung=noi_dung_bai_bao)
+                # print(f"{tieu_de_bai_bao} top 50 {top50.objects.last().tieu_de}")

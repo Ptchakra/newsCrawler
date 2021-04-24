@@ -12,8 +12,9 @@ from django.contrib.auth import update_session_auth_hash
 import validators
 from trangWeb.forms import AddTargetForm, UpdateTargetForm
 from django.urls import reverse
-from .models import TrangWeb
+from .models import TrangWeb, top50, so_bai_tung_trang, tong_bai_hang_ngay
 from django.utils import timezone
+from datetime import datetime
 
 def index(request):
     context = {
@@ -30,8 +31,10 @@ def them_trang_web_form(request):
                 if not bool(TrangWeb.objects.filter(link_trang_web=form.cleaned_data["link_trang_web"])):
                     TrangWeb.objects.create(
                         **form.cleaned_data,
-                        ngay_them=timezone.now(),
+                        ngay_them=datetime.now(),
                         trang_thai_chay = True)
+                    so_bai_tung_trang.objects.create(trang_web=form.cleaned_data["link_trang_web"], so_bai_viet=0)
+
                     messages.add_message(
                         request,
                         messages.INFO,
@@ -54,10 +57,19 @@ def them_trang_web_form(request):
     return render(request, 'trangWeb/add.html', context)
 
 def danh_sach_trang_web(request):
+    # tat_ca_trang_web  = TrangWeb.objects.filter().order_by("")
     context = {
         'list_target_li': 'active',
         'target_data_active': 'true'}
     return render(request, 'trangWeb/list.html', context)
+
+
+def danh_sach_bai_bao(request):
+    print(request)
+    context = {
+        'list_target_li': 'active',
+        'target_data_active': 'true'}
+    return render(request, 'baiBao/list.html', context)
 
 def sua_trang_web_form(request, id):
    

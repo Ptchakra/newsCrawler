@@ -1,20 +1,24 @@
+from __future__ import absolute_import
 import os
 from celery import Celery
+from datetime import datetime, timedelta
 import time
-# from django.conf import settings
-
-
+from . import DoCrawler
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'NewsCrawler.settings')
-
 app = Celery('NewsCrawler')
 app.config_from_object('django.conf:settings', namespace='CELERY')
+
+app.conf.beat_schedule = {
+    "crawler": {
+        'task': 'test',
+        'schedule': 300,
+        'args': ('h'),
+    }
+}
+
+@app.task(name = 'test')
+def test(arg):
+    print("hhhhhhhhhhh")
+    DoCrawler.crawler_handler()
 app.autodiscover_tasks()
-
-
-
-@app.task(name="crawler_handler")
-def crawler_handler():
-    while True:
-        print("handler print")
-        time.sleep(5)
-        print("out")
+# app.on_after_finalize()

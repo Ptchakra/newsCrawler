@@ -25,7 +25,7 @@ class BaiBao(models.Model):
     link_bai_bao = models.CharField(max_length=300,primary_key=True,unique=True,db_index=True)
     tieu_de = models.CharField(max_length=300)
     tac_gia = models.CharField(max_length=300)
-    ngay_them = models.DateTimeField()
+    ngay_them = models.DateTimeField(auto_now_add=True)
     noi_dung = models.TextField()
     chu_de = models.TextField()
     tu_khoa = models.TextField()
@@ -48,14 +48,32 @@ class top50(models.Model):
 
 class so_bai_tung_trang(models.Model):
     trang_web = models.CharField(max_length=300)
-    so_bai_viet = models.IntegerField()
+    so_bai_viet = models.IntegerField(default=0)
     
     def __str__(self):
         return self.trang_web
 
 class tong_bai_hang_ngay(models.Model):
     so_bai_viet = models.IntegerField()
-    ngay_them = models.DateTimeField(default=datetime.now().strftime('%d-%m-%Y %H:%M:%S'))
+    ngay_them = models.DateTimeField(default=datetime.now().strftime('%Y-%m-%d'))
     
     def __str__(self):
         return self.so_bai_viet
+
+class tu_khoa(models.Model):
+    tu_khoa = models.CharField(max_length=300, primary_key=True)
+    so_lan = models.IntegerField()
+    ngay_them = models.DateTimeField(default=datetime.now().strftime('%Y-%m-%d'))
+
+    def __str__(self):
+        return self.tu_khoa
+
+class user(models.Model):
+    username = models.CharField(max_length=300, primary_key=True)
+    password = models.IntegerField()
+    email = models.EmailField()
+    permission = models.CharField(max_length=300)
+    ngay_them = models.DateTimeField(default=datetime.now().strftime('%Y-%m-%d'))
+
+    def __str__(self):
+        return self.username

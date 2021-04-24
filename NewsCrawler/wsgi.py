@@ -16,7 +16,7 @@ from re import A
 
 from django.core.wsgi import get_wsgi_application
 
-from . import DoCrawler,celery
+# from . import DoCrawler
 
 from multiprocessing import Pool
 
@@ -29,5 +29,5 @@ application = get_wsgi_application()
 # os.system("python manage.py process_tasks")
 # pool = Pool(processes=1)
 print("hello worlds")
-celery.crawler_handler.apply_async()
+# DoCrawler.crawler_handler()
 print("have handle")

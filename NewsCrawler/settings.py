@@ -36,8 +36,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_ace',
     'django_celery_beat',
-    'background_task',
     'django_celery_results',
+    
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'NewsCrawler.urls'
 
@@ -98,7 +99,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'Cong@1234',
+        'PASSWORD': '123456',
         'HOST': 'localhost',
         'PORT': 5432,
     }
@@ -170,8 +171,7 @@ CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_ENABLE_UTC = False
 CELERY_TIMEZONE = 'UTC'
 
-BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'default'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'

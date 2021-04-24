@@ -24,4 +24,8 @@ urlpatterns = [
         'delete/<int:id>',
         views.xoa_trang_web,
         name='xoa_trang_web'),
+    path(
+        'bai-bao/list/',
+        views.danh_sach_bai_bao,
+        name='danh_sach_bai_bao'),
 ]
