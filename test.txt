@@ -1,0 +1,4 @@
+https://zingnews.vn/nhan-su-moi.html | <div class="page-wrapper">                       |                           2 | <h1 class="the-article-title"> |                      1 | <div class="the-article-body"> |                   1 | 2021-04-23 23:48:22.140677+07 | t
+ https://zingnews.vn/the-gioi.html    | <div class="page-wrapper">                       |                           2 | <h1 class="the-article-title"> |                      1 | <section class="main">         |                   1 | 2021-04-23 23:56:27.608016+07 | t
+ https://vnexpress.net/thoi-su        | <body class="page-folder " data-source="Folder"> |                           1 | <h1 class="title-detail">      |                      1 | <article class="fck_detail ">  |                   1 | 2021-04-23 23:38:00.873185+07 | t
+(3 rows)
