@@ -1,4 +1,5 @@
 import io
+import re
 import os
 from django.shortcuts import render, get_object_or_404
 from django import http
@@ -69,7 +70,26 @@ def search_bai_bao(request):
     context = {}
     if request.method == 'POST':
         key_word = request.POST.get('keyWord', None)
-        bai_bao = BaiBao.objects.filter().order_by("-ngay_them")[:10]
+        key_word = re.split('\||\&',key_word)
+        print(f"key word {key_word}")
+        for key in key_word:
+            while key[0] == ' ':
+                key = key[1:]
+                print(f"key 0 f{key}f")
+            while key[-1] == ' ':
+                key = key[0:-1]
+                print(f"key -1 f{key}f")
+        if '|' in request.POST.get('keyWord', None):
+            dieu_kien = re.compile(request.POST.get('keyWord', None))
+            # dieu_kien = re.compile('|'.join(key_word))
+            print(dieu_kien)
+            bai_bao = BaiBao.objects.filter(noi_dung__iregex=dieu_kien).order_by("-ngay_them")
+        else: 
+            bai_bao = BaiBao.objects.filter(noi_dung__unaccent__icontains=key_word[0]).order_by("-ngay_them")
+        so_bai = bai_bao.count()
+        if so_bai > 10:
+            bai_bao = bai_bao[:10]
+        print(bai_bao.count())
         danh_sach_ten = []
         for bai in bai_bao:
             danh_sach_ten.append(bai.tieu_de)

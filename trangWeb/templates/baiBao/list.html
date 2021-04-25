@@ -89,29 +89,8 @@ table = $('#style-2').DataTable({
 });
 multiCheck(table);
 // Handle form submission event
-$('#frm-example').on('submit', function(e){
-   var form = this;
-
-   table.$('input[type="checkbox"]').each(function(){
-      if(!$.contains(document, this)){
-         if(this.checked){
-            $(form).append(
-               $('<input>')
-                  .attr('type', 'hidden')
-                  .attr('name', this.name)
-                  .val(this.value)
-            );
-         }
-      }
-   });
-     e.preventDefault();
-});
-
 
 $('#search-key-word').on('submit',function(e) {
-    // alert($('#key-word').value());
-
-
     var form = this;
     var data = (document.getElementById("key-word").value)
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -120,15 +99,24 @@ $('#search-key-word').on('submit',function(e) {
         url: '/trangWeb/search-bai-bao/',
         headers: {'X-CSRFToken': csrftoken},
         type: 'POST',
-        data: 'keyWord=' + data,
+        data: {'keyWord' : data,
+            'page': 1},
         success: function (data) {
-            alert(data.context.danh_sach_ten);
+            alert((data.context));
+
         },
         error: function (e) {
             console.log(e.message);
         }
     });
 
+    
+    highlight_tu_khoa();
+    e.preventDefault();
+
+});
+
+function highlight_tu_khoa(){
     if(document.getElementById("key-word").value.match(/\w+/)){
         var key_word_list = document.getElementById("key-word").value.split(/[\|,\&]+/);
         for(var i =0; i< key_word_list.length; i++){
@@ -145,10 +133,7 @@ $('#search-key-word').on('submit',function(e) {
             $("#show-bai-bao").html(t);
         }
     }
-
-    e.preventDefault();
-
-});
+}
 
 function xem_bai(link_bai_bao){
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -158,10 +143,9 @@ function xem_bai(link_bai_bao){
         type: 'POST',
         data: 'link=' + link_bai_bao,
         success: function (data) {
-            alert(data.context.tieu_de);
-            alert(data.context.noi_dung);
             document.getElementById("tieu_de_bai_bao").innerHTML=data.context.tieu_de;
             document.getElementById("noi_dung_bai_bao").innerText=data.context.noi_dung;
+            highlight_tu_khoa();
         },
         error: function (e) {
             console.log(e.message);
