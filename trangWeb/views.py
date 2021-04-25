@@ -17,6 +17,7 @@ from .models import TrangWeb, top50, so_bai_tung_trang, tong_bai_hang_ngay, BaiB
 from django.utils import timezone
 from datetime import datetime
 import json
+from django.db.models import Q
 
 def index(request):
     context = {
@@ -70,34 +71,88 @@ def search_bai_bao(request):
     context = {}
     if request.method == 'POST':
         key_word = request.POST.get('keyWord', None)
+        now_page = int(request.POST.get('page', None))
+        print(now_page, type(now_page))
         key_word = re.split('\||\&',key_word)
         print(f"key word {key_word}")
-        for key in key_word:
-            while key[0] == ' ':
-                key = key[1:]
-                print(f"key 0 f{key}f")
-            while key[-1] == ' ':
-                key = key[0:-1]
-                print(f"key -1 f{key}f")
+        for i in range(0,len(key_word)):
+            while key_word[i][0] == ' ':
+                key_word[i] = key_word[i][1:]
+                print(f"key 0 f{key_word[i]}f")
+            while key_word[i][-1] == ' ':
+                key_word[i] = key_word[i][0:-1]
+                print(f"key -1 f{key_word[i]}f")
+        bai_bao = None
+        print(key_word)
         if '|' in request.POST.get('keyWord', None):
             dieu_kien = re.compile(request.POST.get('keyWord', None))
             # dieu_kien = re.compile('|'.join(key_word))
-            print(dieu_kien)
-            bai_bao = BaiBao.objects.filter(noi_dung__iregex=dieu_kien).order_by("-ngay_them")
+            if len(key_word) >2:
+                bai_bao = BaiBao.objects.filter(Q(noi_dung__unaccent__icontains=key_word[0])|Q(noi_dung__unaccent__icontains=key_word[1])|Q(noi_dung__unaccent__icontains=key_word[2])).order_by("-ngay_them")
+            elif len(key_word) >1:
+                bai_bao = BaiBao.objects.filter(Q(noi_dung__unaccent__icontains=key_word[0] )|Q(noi_dung__unaccent__icontains=key_word[1])).order_by("-ngay_them")
+            else :
+                bai_bao = BaiBao.objects.filter(noi_dung__unaccent__icontains=key_word[0]).order_by("-ngay_them")
         else: 
-            bai_bao = BaiBao.objects.filter(noi_dung__unaccent__icontains=key_word[0]).order_by("-ngay_them")
-        so_bai = bai_bao.count()
-        if so_bai > 10:
-            bai_bao = bai_bao[:10]
-        print(bai_bao.count())
-        danh_sach_ten = []
-        for bai in bai_bao:
-            danh_sach_ten.append(bai.tieu_de)
+            if len(key_word) >2:
+                bai_bao = BaiBao.objects.filter(noi_dung__unaccent__icontains=key_word[0]).filter(noi_dung__unaccent__icontains=key_word[1]).filter(noi_dung__unaccent__icontains=key_word[2]).order_by("-ngay_them")
+            elif len(key_word) >1:
+                bai_bao = BaiBao.objects.filter(noi_dung__unaccent__icontains=key_word[0]).filter(noi_dung__unaccent__icontains=key_word[1]).order_by("-ngay_them")
+            else :
+                bai_bao = BaiBao.objects.filter(noi_dung__unaccent__icontains=key_word[0]).order_by("-ngay_them")
+        so_bai = 0
+        if bai_bao :
+            so_bai = bai_bao.count()
+        print(so_bai)
+        so_page =1
+        tu_bai = 1
+        den_bai =1 
+        if so_bai > 10 :
+            so_page = (so_bai+9)//10
+        
+        tieu_de=[]
+        link = []
+        ngay = []
+        if now_page > so_page:
+            now_page =1
+            if bai_bao.count() >10:
+                for bai in bai_bao[:10]:
+                    tieu_de.append(bai.tieu_de)
+                    link.append(bai.link_bai_bao)
+                    ngay.append(bai.ngay_them.astimezone())
+                den_bai=10
+            else: 
+                for bai in bai_bao:
+                    tieu_de.append(bai.tieu_de)
+                    link.append(bai.link_bai_bao)
+                    ngay.append(bai.ngay_them.astimezone())
+                den_bai= so_bai
+            
+        elif now_page*10 > so_bai:
+            for bai in bai_bao[(now_page-1)*10:]:
+                tieu_de.append(bai.tieu_de)
+                link.append(bai.link_bai_bao)
+                ngay.append(bai.ngay_them.astimezone())
+            tu_bai = (now_page-1)*10+1
+            den_bai = so_bai
+        else:
+            for bai in  bai_bao[(now_page-1)*10:now_page*10]:
+                tieu_de.append(bai.tieu_de)
+                link.append(bai.link_bai_bao)
+                ngay.append(bai.ngay_them.astimezone())
+            tu_bai = (now_page-1)*10 +1
+            den_bai = now_page*10
+
         context = {
-            'danh_sach_ten': danh_sach_ten,
-            'target_data_active': 'true'}
+            'tieu_de' : tieu_de,
+            'link': link,
+            'so_bai': so_bai,
+            'so_page': so_page,
+            'now_page': now_page,
+            'tu_bai': tu_bai,
+            'den_bai': den_bai}
     print(json.dumps({'context': context}))
-    return HttpResponse(json.dumps({'context': context}), content_type="application/json")
+    return HttpResponse(json.dumps({'context': context}, ), content_type="application/json")
 
 def load_noi_dung(request):
     # tat_ca_trang_web  = TrangWeb.objects.filter().order_by("")
@@ -115,9 +170,9 @@ def danh_sach_bai_bao(request):
     baibao  = BaiBao.objects.filter().order_by("-ngay_them")[:10]
     so_bai_bao = BaiBao.objects.count()
     so_page =  int(int(so_bai_bao + 9)/10)
-    tu_bai = 10
+    tu_bai = 1
     now_page = 1   
-    den_bai = 20
+    den_bai = 10
     context = {
         'list_target_li': 'active',
         'target_data_active': 'true',

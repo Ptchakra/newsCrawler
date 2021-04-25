@@ -36,28 +36,36 @@ List all Target for Recon
     
     <div class="row" id="show-bai-bao">
         <div class="col-sm widget box box-shadow" style="background-color: white; margin-left: 20px; margin-right: 10px; margin-bottom: 30px;">
-            <div class="slide-wrapper" style="color:black;" id="danh-sach-bai-bao">
+            <div class="slide-wrapper" style="color:black;" >
                 {% csrf_token %}
+                <div id="danh-sach-bai-bao">
                     {% for item in bai_bao %}
                     <div class="slide" id='{{item.link_bai_bao}}'>
                         <div style="color:black;font-weight: bold;" onclick="xem_bai('{{item.link_bai_bao}}')">{{forloop.counter}}. ({% load tz %}{% localtime on %}{{item.ngay_them}}{% endlocaltime %}) {{item.tieu_de}}</div>
                         <a style="color:blue;" href='{{item.link_bai_bao}}' target="_blank">{{item.link_bai_bao}}</a>
                     </div>
                     {% endfor %}
-                <div class="dataTables_info" id="style-2_info" role="status" aria-live="polite">Showing {{tu_bai}} to {{den_bai}} of {{so_bai_bao}} entries
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-end">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1">Previous</a>
-                            </li>
-                            <li class="page-item active" ><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="dataTables_info" id="style-2_info" role="status" aria-live="polite">Showing {{tu_bai}} to {{den_bai}} of {{so_bai_bao}} entries
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <nav aria-label="Page navigation example" id="pagging">
+                            <ul class="pagination justify-content-end">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                </li>
+                                <li class="page-item active" ><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
                 
             </div>
@@ -90,31 +98,7 @@ table = $('#style-2').DataTable({
 multiCheck(table);
 // Handle form submission event
 
-$('#search-key-word').on('submit',function(e) {
-    var form = this;
-    var data = (document.getElementById("key-word").value)
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-    $.ajax({
-        url: '/trangWeb/search-bai-bao/',
-        headers: {'X-CSRFToken': csrftoken},
-        type: 'POST',
-        data: {'keyWord' : data,
-            'page': 1},
-        success: function (data) {
-            alert((data.context));
-
-        },
-        error: function (e) {
-            console.log(e.message);
-        }
-    });
-
-    
-    highlight_tu_khoa();
-    e.preventDefault();
-
-});
 
 function highlight_tu_khoa(){
     if(document.getElementById("key-word").value.match(/\w+/)){
@@ -152,31 +136,44 @@ function xem_bai(link_bai_bao){
         }
     });
 }
+$('#search-key-word').on('submit',function(e) {
+    var form = this;
+    var data = (document.getElementById("key-word").value)
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-function scanMultipleTargets()
-{
-    // logic can be improved
-    // this function will check if atleast one checkbox for multiple targets are
-    // checked or not
-    item = document.getElementsByClassName("targets_checkbox");
-    checkedCount = 0;
-    for (var i = 0; i < item.length; i++) {
-        if (item[i].checked) {
-            checkedCount++;
+    $.ajax({
+        url: '/trangWeb/search-bai-bao/',
+        headers: {'X-CSRFToken': csrftoken},
+        type: 'POST',
+        data: {'keyWord' : data,
+            'page': '1'},
+        success: function (data) {
+            
+            document.getElementById("style-2_info").innerHTML = "Showing "+data.context.tu_bai+" to "+data.context.den_bai+" of "+data.context.so_bai+" entries";
+            var newHtml = '';
+            for(var i =0; i< data.context.tieu_de.length;i++){
+                newHtml += '<div class="slide" id='+data.context.link[i]+'><div style="color:black;font-weight: bold;" onclick="xem_bai(\''+data.context.link[i]+'\')">'+parseInt(parseInt(i)+parseInt(1))+'. (April 25, 2021, 11:53 p.m.) '+data.context.tieu_de[i]+'</div><a style="color:blue;" href='+data.context.link[i]+' target="_blank">'+data.context.link[i]+'</a></div>';
+            }
+            document.getElementById("danh-sach-bai-bao").innerHTML=newHtml;
+            if(parseInt(data.context.so_page)<3){
+                var newPagging = '<ul class="pagination justify-content-end"><li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">Previous</a></li><li class="page-item active" ><a class="page-link" href="#">1</a></li>';
+                for(i =1;i<parseInt(data.context.so_page);i++){
+                    newPagging += '<li class="page-item"><a class="page-link" href="#">'+parseInt(parseInt(i)+parseInt(1))+'</a></li>';
+                }
+                newPagging += '<li class="page-item"> <a class="page-link" href="#">Next</a></li></ul>';
+                document.getElementById("pagging").innerHTML = newPagging;      
+            }
+            highlight_tu_khoa();
+
+            e.preventDefault();
+        },
+        error: function (e) {
+            console.log(e.message);
         }
-    }
-    if (!checkedCount) {
-        swal({
-            title: '',
-            text: "Oops! No targets has been selected!",
-            type: 'error',
-            padding: '2em'
-        })
-    }
-    else {
-        // atleast one target is selected
-        document.getElementById("multiple_targets_form").submit();
-    }
-}
+    });
+    e.preventDefault();
+
+});
+
 </script>
 {% endblock page_level_script %}
