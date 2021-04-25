@@ -28,4 +28,12 @@ urlpatterns = [
         'bai-bao/list/',
         views.danh_sach_bai_bao,
         name='danh_sach_bai_bao'),
+    path(
+        'search-bai-bao/',
+        views.search_bai_bao,
+        name='search_bai_bao'),
+    path(
+        'load-noi-dung/',
+        views.load_noi_dung,
+        name='load_noi_dung'),
 ]

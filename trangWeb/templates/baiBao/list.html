@@ -27,28 +27,45 @@ List all Target for Recon
     <div class="row layout-spacing">
         <div class="col-sm-4" ></div>
         <div class="col-sm-4" >
-            <form onsubmit="updateSearch()">
-                <input type="search" class="baibao-search-bar form-control" placeholder="Search...">
+            <form id="search-key-word" method="post">
+                {% csrf_token %}
+                <input id="key-word" type="search" class="baibao-search-bar form-control" placeholder="Search...">
             </form>
         </div>
     </div>
     
-    <div class="row">
+    <div class="row" id="show-bai-bao">
         <div class="col-sm widget box box-shadow" style="background-color: white; margin-left: 20px; margin-right: 10px; margin-bottom: 30px;">
-            <div class="slide-wrapper" style="color:black;">
+            <div class="slide-wrapper" style="color:black;" id="danh-sach-bai-bao">
                 {% csrf_token %}
                     {% for item in bai_bao %}
-                    <div class="slide">
-                        <div style="color:black;">'{{item.tieu_de}}'</div>
-                        <a style="color:blue;" href='{{item.link_bai_bao}}' target="_blank">'{{item.link_bai_bao}}'</a>
+                    <div class="slide" id='{{item.link_bai_bao}}'>
+                        <div style="color:black;font-weight: bold;" onclick="xem_bai('{{item.link_bai_bao}}')">{{forloop.counter}}. ({% load tz %}{% localtime on %}{{item.ngay_them}}{% endlocaltime %}) {{item.tieu_de}}</div>
+                        <a style="color:blue;" href='{{item.link_bai_bao}}' target="_blank">{{item.link_bai_bao}}</a>
                     </div>
                     {% endfor %}
-                <div class="dataTables_info" id="style-2_info" role="status" aria-live="polite">Showing '{{tu_bai}} to '{{den_bai}}' of '{{so_bai_bao}}' entries</div>
+                <div class="dataTables_info" id="style-2_info" role="status" aria-live="polite">Showing {{tu_bai}} to {{den_bai}} of {{so_bai_bao}} entries
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                            <li class="page-item active" ><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                
             </div>
         </div>
         <div class="col-sm widget box box-shadow" style="background-color: white; margin-left: 10px; margin-right: 20px; margin-bottom: 30px;">
             <div class="slide-wrapper" style="color:black;" id="bai-bao-detail">
-                
+                <h3 style="color:black;" id='tieu_de_bai_bao'></h3>
+                <div style="color:black;" id="noi_dung_bai_bao"></div>
             </div>
         </div>
     </div>
@@ -91,8 +108,65 @@ $('#frm-example').on('submit', function(e){
 });
 
 
-function updateSearch() {
-    alert("The form was submitted");
+$('#search-key-word').on('submit',function(e) {
+    // alert($('#key-word').value());
+
+
+    var form = this;
+    var data = (document.getElementById("key-word").value)
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    $.ajax({
+        url: '/trangWeb/search-bai-bao/',
+        headers: {'X-CSRFToken': csrftoken},
+        type: 'POST',
+        data: 'keyWord=' + data,
+        success: function (data) {
+            alert(data.context.danh_sach_ten);
+        },
+        error: function (e) {
+            console.log(e.message);
+        }
+    });
+
+    if(document.getElementById("key-word").value.match(/\w+/)){
+        var key_word_list = document.getElementById("key-word").value.split(/[\|,\&]+/);
+        for(var i =0; i< key_word_list.length; i++){
+            
+            if(key_word_list[i].substring(0,1)==' '){
+                key_word_list[i] = key_word_list[i].substr(1);
+            }
+            if(key_word_list[i].substr(key_word_list[i].length - 1) ==' '){
+                key_word_list[i] = key_word_list[i].substring(0, key_word_list[i].length -1);
+            }
+            var t = $("#show-bai-bao").html();
+            var regex =  new RegExp(key_word_list[i],'g'); 
+            t = t.replace(regex, "<span class='highlight' style='background-color: limegreen;'>"+key_word_list[i]+"</span>");
+            $("#show-bai-bao").html(t);
+        }
+    }
+
+    e.preventDefault();
+
+});
+
+function xem_bai(link_bai_bao){
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    $.ajax({
+        url: '/trangWeb/load-noi-dung/',
+        headers: {'X-CSRFToken': csrftoken},
+        type: 'POST',
+        data: 'link=' + link_bai_bao,
+        success: function (data) {
+            alert(data.context.tieu_de);
+            alert(data.context.noi_dung);
+            document.getElementById("tieu_de_bai_bao").innerHTML=data.context.tieu_de;
+            document.getElementById("noi_dung_bai_bao").innerText=data.context.noi_dung;
+        },
+        error: function (e) {
+            console.log(e.message);
+        }
+    });
 }
 
 function scanMultipleTargets()

@@ -22,6 +22,7 @@ except ImportError:
 # from trangWeb.models import TrangWeb
 from celery import shared_task
 import time
+from django.utils import timezone
 
 
 def crawler_handler():
@@ -110,10 +111,8 @@ def crawlerBaiBao(link_trang_web, link_trang_bai_viet, the_tieu_de, thu_tu_the_t
             tieu_de_bai_bao = html_trang_bai_bao.find_all(tag_tieu_de, attrs_the_tieu_de)[thu_tu_the_tieu_de]
             tieu_de_bai_bao = str(tieu_de_bai_bao.text)
             print(tieu_de_bai_bao)
-            print("=============================")
         except:
             tieu_de_bai_bao = link_trang_bai_viet
-            print("deco co ==============================")
 
         # Lay noi dung bai bao
         noi_dung_bai_bao = html_trang_bai_bao.find_all(tag_noi_dung, attrs_the_noi_dung)[thu_tu_the_noi_dung]
@@ -131,7 +130,7 @@ def crawlerBaiBao(link_trang_web, link_trang_bai_viet, the_tieu_de, thu_tu_the_t
         noi_dung_bai_bao = list(filter(('').__ne__, noi_dung_bai_bao))
         noi_dung_bai_bao = '\n'.join(noi_dung_bai_bao)
         if noi_dung_bai_bao != '':
-            bai_moi = BaiBao.objects.create(ten_trang_web= TrangWeb.objects.filter(link_trang_web=link_trang_web)[0], link_bai_bao=link_trang_bai_viet, tieu_de= tieu_de_bai_bao, ngay_them=datetime.now(), noi_dung=noi_dung_bai_bao)
+            bai_moi = BaiBao.objects.create(ten_trang_web= TrangWeb.objects.filter(link_trang_web=link_trang_web)[0], link_bai_bao=link_trang_bai_viet, tieu_de= tieu_de_bai_bao, ngay_them=timezone.now(), noi_dung=noi_dung_bai_bao)
             bai_moi.save()
             try:
                 so_bai_moi_trang = so_bai_tung_trang.objects.filter(trang_web=link_trang_web)[0]
@@ -149,8 +148,8 @@ def crawlerBaiBao(link_trang_web, link_trang_bai_viet, the_tieu_de, thu_tu_the_t
 
             if top50.objects.all().count() < 50:
                 print(tieu_de_bai_bao)
-                top50.objects.create(ten_trang_web= TrangWeb.objects.filter(link_trang_web=link_trang_web)[0], link_bai_bao=link_trang_bai_viet, tieu_de= tieu_de_bai_bao, ngay_them=datetime.now(), noi_dung=noi_dung_bai_bao)
+                top50.objects.create(ten_trang_web= TrangWeb.objects.filter(link_trang_web=link_trang_web)[0], link_bai_bao=link_trang_bai_viet, tieu_de= tieu_de_bai_bao, ngay_them=timezone.now(), noi_dung=noi_dung_bai_bao)
             else:
                 top50.objects.first().delete()
-                top50.objects.create(ten_trang_web= TrangWeb.objects.filter(link_trang_web=link_trang_web)[0], link_bai_bao=link_trang_bai_viet, tieu_de= tieu_de_bai_bao, ngay_them=datetime.now(), noi_dung=noi_dung_bai_bao)
+                top50.objects.create(ten_trang_web= TrangWeb.objects.filter(link_trang_web=link_trang_web)[0], link_bai_bao=link_trang_bai_viet, tieu_de= tieu_de_bai_bao, ngay_them=timezone.now(), noi_dung=noi_dung_bai_bao)
                 # print(f"{tieu_de_bai_bao} top 50 {top50.objects.last().tieu_de}")

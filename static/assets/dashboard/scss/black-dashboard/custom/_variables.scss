@@ -858,33 +858,6 @@ $badge-pill-border-radius:          $border-radius-xl !default;
 
 $badge-circle-size:                 2rem;
 
-// Pagination
-
-$pagination-padding-y:                0 !default;
-$pagination-padding-x:                .6875rem !default;
-
-
-$pagination-color:                  $white !default;
-$pagination-bg:                     transparent  !default;
-$pagination-border-width:           $border-width !default;
-$pagination-border-color:           $gray-300 !default;
-
-//$pagination-focus-box-shadow:       $btn-hover-box-shadow !default;
-
-$pagination-hover-color:            $gray-600 !default;
-$pagination-hover-bg:               $gray-300 !default;
-$pagination-hover-border-color:     $gray-300 !default;
-
-$pagination-active-color:           $component-active-color !default;
-$pagination-active-bg:              $component-active-bg !default;
-$pagination-active-border-color:    $pagination-active-bg !default;
-$pagination-active-box-shadow:      $btn-hover-box-shadow !default;
-
-$pagination-disabled-color:         $gray-600 !default;
-$pagination-disabled-bg:            transparent !default;
-$pagination-disabled-border-color:  $gray-300 !default;
-
-
 // Cards
 
 $card-spacer-y:                     1.25rem !default;

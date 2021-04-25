@@ -152,40 +152,6 @@ div.dataTables_wrapper div.dataTables_paginate {
   text-align: right;
   display: inline-block; }
 
-.page-link {
-  margin-right: 5px;
-  border-radius: 50%;
-  padding: 8px 12px;
-  background: rgba(0, 23, 55, 0.08);
-  border: none;
-  color: #888ea8; }
-  .page-link:focus {
-    box-shadow: none; }
-
-div.dataTables_wrapper div.dataTables_paginate ul.pagination {
-  margin: 3px 0; }
-
-.page-item.disabled .page-link {
-  background: #f1f2f3; }
-  .page-item.disabled .page-link svg {
-    color: #acb0c3; }
-
-.page-item:first-child .page-link, .page-item:last-child .page-link {
-  border-radius: 50%;
-  padding: 5px 9px; }
-  .page-item:first-child .page-link svg, .page-item:last-child .page-link svg {
-    width: 17px; }
-
-.page-item.active .page-link {
-  background-color: #1b55e2; }
-
-#alter_pagination_next a, #alter_pagination_previous a {
-  border-radius: 50%;
-  padding: 5px 9px; }
-
-#alter_pagination_next a svg, #alter_pagination_previous a svg {
-  width: 17px; }
-
 .table-cancel {
   color: #888ea8;
   margin-right: 6px;

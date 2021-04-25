@@ -3,7 +3,7 @@ import os
 from django.shortcuts import render, get_object_or_404
 from django import http
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse, response
 from django.contrib.auth.decorators import login_required
 from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_out, user_logged_in
@@ -15,6 +15,7 @@ from django.urls import reverse
 from .models import TrangWeb, top50, so_bai_tung_trang, tong_bai_hang_ngay, BaiBao
 from django.utils import timezone
 from datetime import datetime
+import json
 
 def index(request):
     context = {
@@ -63,6 +64,32 @@ def danh_sach_trang_web(request):
         'target_data_active': 'true'}
     return render(request, 'trangWeb/list.html', context)
 
+def search_bai_bao(request):
+    # tat_ca_trang_web  = TrangWeb.objects.filter().order_by("")
+    context = {}
+    if request.method == 'POST':
+        key_word = request.POST.get('keyWord', None)
+        bai_bao = BaiBao.objects.filter().order_by("-ngay_them")[:10]
+        danh_sach_ten = []
+        for bai in bai_bao:
+            danh_sach_ten.append(bai.tieu_de)
+        context = {
+            'danh_sach_ten': danh_sach_ten,
+            'target_data_active': 'true'}
+    print(json.dumps({'context': context}))
+    return HttpResponse(json.dumps({'context': context}), content_type="application/json")
+
+def load_noi_dung(request):
+    # tat_ca_trang_web  = TrangWeb.objects.filter().order_by("")
+    context = {}
+    if request.method == 'POST':
+        link = request.POST.get('link', None)
+        bai_bao = BaiBao.objects.filter(link_bai_bao=link)[0]
+        context = {
+            'tieu_de': bai_bao.tieu_de,
+            'noi_dung': bai_bao.noi_dung}
+    print(json.dumps({'context': context}))
+    return HttpResponse(json.dumps({'context': context}), content_type="application/json")
 
 def danh_sach_bai_bao(request):
     baibao  = BaiBao.objects.filter().order_by("-ngay_them")[:10]

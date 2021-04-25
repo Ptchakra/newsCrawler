@@ -14,7 +14,7 @@ class TrangWeb(models.Model):
     thu_tu_the_noi_dung = models.IntegerField(default=0)
     # the_tac_gia = models.CharField(max_length=300)
     # thu_tu_cua_the_tac_gia = models.IntegerField(default=0)
-    ngay_them = models.DateTimeField(default=datetime.now().strftime('%d-%m-%Y %H:%M:%S'))
+    ngay_them = models.DateTimeField(default=timezone.now().strftime('%d-%m-%Y %H:%M:%S'))
     trang_thai_chay = models.BooleanField(default=True)
 
     def __str__(self):
@@ -55,7 +55,7 @@ class so_bai_tung_trang(models.Model):
 
 class tong_bai_hang_ngay(models.Model):
     so_bai_viet = models.IntegerField()
-    ngay_them = models.DateTimeField(default=datetime.now().strftime('%Y-%m-%d'))
+    ngay_them = models.DateTimeField(default=timezone.now().strftime('%Y-%m-%d'))
     
     def __str__(self):
         return self.so_bai_viet
@@ -63,7 +63,7 @@ class tong_bai_hang_ngay(models.Model):
 class tu_khoa(models.Model):
     tu_khoa = models.CharField(max_length=300, primary_key=True)
     so_lan = models.IntegerField()
-    ngay_them = models.DateTimeField(default=datetime.now().strftime('%Y-%m-%d'))
+    ngay_them = models.DateTimeField(default=timezone.now().strftime('%Y-%m-%d'))
 
     def __str__(self):
         return self.tu_khoa
@@ -73,7 +73,7 @@ class user(models.Model):
     password = models.IntegerField()
     email = models.EmailField()
     permission = models.CharField(max_length=300)
-    ngay_them = models.DateTimeField(default=datetime.now().strftime('%Y-%m-%d'))
+    ngay_them = models.DateTimeField(default=timezone.now().strftime('%Y-%m-%d'))
 
     def __str__(self):
         return self.username
