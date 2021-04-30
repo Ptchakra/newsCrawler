@@ -8,6 +8,18 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from trangWeb.models import TrangWeb, BaiBao, tong_bai_hang_ngay, tu_khoa, top50, so_bai_tung_trang
 from datetime import timedelta
+import io
+import urllib, base64
+import numpy as np
+import pandas as pd
+from os import path
+from PIL import Image
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+import matplotlib.pyplot as plt
+import matplotlib
+# matplotlib.use('Agg')
+matplotlib.use('TkAgg')
+
 def index(request):
 
     bai_viet_10_ngay = tong_bai_hang_ngay.objects.filter().order_by("-ngay_them")[:10]
@@ -49,15 +61,38 @@ def index(request):
     print(so_bai_top_10_trang_web)
     print(ten_top_10_trang_web)
 
-    top_50_bai_moi = top50.objects.filter().order_by("ngay_them")
-    top50_tieu_de = []
-    top50_link = []
-    for i in top_50_bai_moi:
-        top50_tieu_de.append(i.tieu_de)
-        top50_link.append(i.link_bai_bao)
+    top_50_bai_moi = list(top50.objects.filter().order_by("ngay_them"))
+    # top50_tieu_de = []
+    # top50_link = []
+    # for i in top_50_bai_moi:
+    #     top50_tieu_de.append(i.tieu_de)
+    #     top50_link.append(i.link_bai_bao)
     
-    print(top50_tieu_de)
-    print(top50_link)
+    # print(top50_tieu_de)
+    # print(top50_link)
+    tukhoa = tu_khoa.objects.filter().order_by('-so_lan')
+    text = '\n'.join(tu.tu_khoa for tu in tukhoa)
+    print(text)
+    wordcloud = WordCloud(width = 800, height = 800,
+                background_color ='white',
+                stopwords = None,
+                min_font_size = 10,contour_width=4).generate(text)
+
+
+    plt.figure(figsize = (8, 8), facecolor = None)
+    plt.imshow(wordcloud,interpolation='bilinear')
+    plt.axis("off")
+
+    image = io.BytesIO()
+    plt.savefig(image, format='png')
+    image.seek(0)  # rewind the data
+    string = base64.b64encode(image.read()).decode('utf-8')
+
+    # plt.show()
+
+    image_64 = 'data:image/png;base64,' + urllib.parse.quote(string)
+    print(image_64)
+    print("aaa")
     context = {
         'dashboard_data_active': 'true',
         'so_bai_10_ngay' : so_bai_10_ngay,
@@ -65,7 +100,8 @@ def index(request):
         'top_10_trang_web' : so_bai_top_10_trang_web,
         'ten_10_trang_web' : ten_top_10_trang_web,
         'top_bai_bao' : so_bai_top_10_trang_web,
-        'tu_khoa' : '',
+        'tu_khoa' : image_64,
+        'top_50_bai_moi' : top_50_bai_moi,
         }
     return render(request, 'dashboard/index.html', context)
 

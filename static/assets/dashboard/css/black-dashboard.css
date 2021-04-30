@@ -88,7 +88,7 @@ body {
   line-height: 1.5;
   color: #525f7f;
   text-align: left;
-  background-color: #1e1e2f;
+  background-color: #f2f2f2 ;
 }
 
 [tabindex="-1"]:focus {
@@ -728,8 +728,8 @@ pre code {
 .col-xl-auto {
   position: relative;
   width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
+  padding-right: 5px;
+  padding-left: 5px;
 }
 
 .col {
@@ -17737,8 +17737,9 @@ table.tablesorter thead tr .headerSortDown {
 }
 
 .main-panel>.content {
-  padding: 30px 30px 30px 20px;
+  padding: 30px 30px 0px 20px;
   /* min-height: calc(100vh - 70px); */
+  background-color: white;
 }
 
 .main-panel>.navbar {
@@ -17955,6 +17956,7 @@ table.tablesorter thead tr .headerSortDown {
 
   .main-panel .content {
     padding-left: 30px;
+    background-color: white;
   }
 
   .nav-open .main-panel {
@@ -18050,6 +18052,7 @@ table.tablesorter thead tr .headerSortDown {
   .main-panel .content {
     padding-left: 15px;
     padding-right: 15px;
+    background-color: white;
   }
 }
 
@@ -18535,6 +18538,7 @@ code {
 
 .rtl .main-panel .content {
   padding: 80px 280px 30px 30px;
+  background-color: white;
 }
 
 .rtl .footer {
@@ -18628,6 +18632,7 @@ code {
 
   .rtl .main-panel .content {
     padding-right: 50px;
+    background-color: white;
   }
 
   .rtl #bodyClick {
@@ -18682,6 +18687,7 @@ code {
   .rtl .main-panel .content {
     padding-left: 15px;
     padding-right: 15px;
+    background-color: white;
   }
 }
 
@@ -19846,7 +19852,7 @@ Copyright (c) 2015 Daniel Eden
   border: 0;
   position: relative;
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   box-shadow: 0 1px 20px 0px rgba(0, 0, 0, 0.1);
 }
 
